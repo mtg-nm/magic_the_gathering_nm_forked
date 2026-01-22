@@ -1,65 +1,198 @@
-import Image from "next/image";
+import { getPages, getNavigation, getEvents, getVendors, getLocation } from '@/lib/contentful';
 
-export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+export default async function Home() {
+  try {
+    const navigation = await getNavigation();
+    const pages = await getPages();
+    const events = await getEvents();
+    const vendors = await getVendors();
+    const location = await getLocation();
+
+    return (
+      <div style={{ fontFamily: 'Arial, sans-serif', padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+        {/* Header */}
+        <header style={{ marginBottom: '40px', borderBottom: '2px solid #333', paddingBottom: '20px' }}>
+          <h1 style={{ fontSize: '2.5em', margin: '0 0 10px 0' }}>⚔️ Magic the Gathering Turnering</h1>
+          <p style={{ color: '#666', margin: '0' }}>Den ultimate MTG-turneringen i Norge</p>
+        </header>
+
+        {/* Navigation */}
+        {navigation && (
+          <nav style={{ marginBottom: '40px', backgroundColor: '#f5f5f5', padding: '15px', borderRadius: '5px' }}>
+            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+              <a href="/" style={{ textDecoration: 'none', color: '#0066cc', fontWeight: 'bold' }}>
+                🏠 Hjem
+              </a>
+              {Array.isArray(navigation?.fields?.items) &&
+                navigation.fields.items.map((item: any) => (
+                  <a
+                    key={item.sys.id}
+                    href={`/${String(item.fields.slug)}`}
+                    style={{ textDecoration: 'none', color: '#0066cc', fontWeight: 'bold' }}
+                  >
+                    {String(item.fields.title)}
+                  </a>
+                ))}
+            </div>
+          </nav>
+        )}
+
+        {/* Events Section */}
+        {Array.isArray(events) && events.length > 0 && (
+          <section style={{ marginBottom: '40px' }}>
+            <h2 style={{ fontSize: '1.8em', borderBottom: '2px solid #0066cc', paddingBottom: '10px' }}>
+              📅 Arrangementer ({events.length})
+            </h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px', marginTop: '20px' }}>
+              {events.map((event: any) => (
+                <div
+                  key={event.sys.id}
+                  style={{
+                    border: '1px solid #ddd',
+                    borderRadius: '8px',
+                    padding: '15px',
+                    backgroundColor: '#fafafa',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                  }}
+                >
+                  <h3 style={{ margin: '0 0 10px 0', color: '#333' }}>
+                    {String(event.fields?.title || 'Unavngitt arrangement')}
+                  </h3>
+                  {event.fields?.day && (
+                    <p style={{ margin: '5px 0', color: '#666' }}>
+                      <strong>Dag:</strong> {String(event.fields.day)}
+                    </p>
+                  )}
+                  {event.fields?.time && (
+                    <p style={{ margin: '5px 0', color: '#666' }}>
+                      <strong>Tid:</strong> {String(event.fields.time)}
+                    </p>
+                  )}
+                  {event.fields?.description && typeof event.fields.description === 'string' && (
+                    <p style={{ margin: '10px 0 0 0', color: '#555' }}>{event.fields.description}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Pages Section */}
+        {Array.isArray(pages) && pages.length > 0 && (
+          <section style={{ marginBottom: '40px' }}>
+            <h2 style={{ fontSize: '1.8em', borderBottom: '2px solid #0066cc', paddingBottom: '10px' }}>
+              📄 Informasjon ({pages.length})
+            </h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px', marginTop: '20px' }}>
+              {pages.map((page: any) => (
+                <div
+                  key={page.sys.id}
+                  style={{
+                    border: '1px solid #ddd',
+                    borderRadius: '8px',
+                    padding: '15px',
+                    backgroundColor: '#fafafa',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                  }}
+                >
+                  <h3 style={{ margin: '0 0 10px 0', color: '#333' }}>
+                    {String(page.fields?.title || 'Unavngitt side')}
+                  </h3>
+                  {page.fields?.description && typeof page.fields.description === 'string' && (
+                    <p style={{ margin: '0', color: '#666' }}>{page.fields.description}</p>
+                  )}
+                  {page.fields?.slug && (
+                    <a
+                      href={`/${String(page.fields.slug)}`}
+                      style={{
+                        display: 'inline-block',
+                        marginTop: '10px',
+                        padding: '8px 12px',
+                        backgroundColor: '#0066cc',
+                        color: 'white',
+                        textDecoration: 'none',
+                        borderRadius: '4px',
+                        fontSize: '0.9em',
+                      }}
+                    >
+                      Les mer →
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Vendors Section */}
+        {Array.isArray(vendors) && vendors.length > 0 && (
+          <section style={{ marginBottom: '40px' }}>
+            <h2 style={{ fontSize: '1.8em', borderBottom: '2px solid #0066cc', paddingBottom: '10px' }}>
+              🛍️ Leverandører ({vendors.length})
+            </h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '20px', marginTop: '20px' }}>
+              {vendors.map((vendor: any) => (
+                <div
+                  key={vendor.sys.id}
+                  style={{
+                    border: '1px solid #ddd',
+                    borderRadius: '8px',
+                    padding: '15px',
+                    backgroundColor: '#fafafa',
+                    textAlign: 'center',
+                  }}
+                >
+                  <h3 style={{ margin: '0 0 10px 0', color: '#333' }}>
+                    {String(vendor.fields?.name || 'Unavngitt leverandør')}
+                  </h3>
+                  {vendor.fields?.description && typeof vendor.fields.description === 'string' && (
+                    <p style={{ margin: '0', color: '#666', fontSize: '0.95em' }}>
+                      {vendor.fields.description}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Location Section */}
+        {location && location.fields && (
+          <section style={{ marginBottom: '40px', backgroundColor: '#f0f8ff', padding: '20px', borderRadius: '8px' }}>
+            <h2 style={{ fontSize: '1.8em', color: '#333', margin: '0 0 15px 0' }}>📍 Lokasjon</h2>
+            {location.fields.name && (
+              <p style={{ margin: '5px 0', fontSize: '1.1em' }}>
+                <strong>{String(location.fields.name)}</strong>
+              </p>
+            )}
+            {location.fields.address && (
+              <p style={{ margin: '5px 0', color: '#666' }}>{String(location.fields.address)}</p>
+            )}
+            {(location.fields.city || location.fields.postalCode) && (
+              <p style={{ margin: '5px 0', color: '#666' }}>
+                {location.fields.city ? String(location.fields.city) : ''}{' '}
+                {location.fields.postalCode ? String(location.fields.postalCode) : ''}
+              </p>
+            )}
+          </section>
+        )}
+
+        {/* Footer */}
+        <footer style={{ marginTop: '60px', borderTop: '2px solid #333', paddingTop: '20px', textAlign: 'center', color: '#666' }}>
+          <p>&copy; 2024 Magic the Gathering Turnering. Alle rettigheter reservert.</p>
+        </footer>
+      </div>
+    );
+  } catch (error) {
+    console.error('Error loading content:', error);
+    return (
+      <div style={{ padding: '20px', textAlign: 'center' }}>
+        <h1>❌ Feil ved lasting av innhold</h1>
+        <p>Kunne ikke laste data fra Contentful. Sjekk at environment-variabler er riktig satt.</p>
+        <pre style={{ backgroundColor: '#f5f5f5', padding: '15px', borderRadius: '5px', textAlign: 'left', overflowX: 'auto' }}>
+          {error instanceof Error ? error.message : 'Ukjent feil'}
+        </pre>
+      </div>
+    );
+  }
 }
