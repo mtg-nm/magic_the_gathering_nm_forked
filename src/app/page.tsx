@@ -21,19 +21,17 @@ export default async function Home() {
                 </div>
               </div>
               <nav className="nav-menu">
-                <a href="/" className="active">🏠 Hjem</a>
-                {Array.isArray(navigation?.fields?.items) &&
-                  navigation.fields.items.map((item: any) => (
+                {Array.isArray(navigation) &&
+                  navigation.map((item: any) => (
                     <a
                       key={item.sys.id}
-                      href={`/${String(item.fields.slug)}`}
+                      href={`/${String(item.fields?.slug || item.fields?.url || '')}`}
+                      target={item.fields?.isExternal ? '_blank' : undefined}
+                      className={item.fields?.slug === '' || item.fields?.url === '' ? 'active' : ''}
                     >
-                      {String(item.fields.title)}
+                      {String(item.fields?.title || item.fields?.label || 'Link')}
                     </a>
                   ))}
-                <a href="https://discord.com/invite/7UtayJsGBB" target="_blank" className="btn btn-discord">
-                  Discord
-                </a>
               </nav>
             </div>
           </div>

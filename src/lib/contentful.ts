@@ -9,15 +9,16 @@ const client = createClient({
 
 export async function getNavigation() {
   const entries = await client.getEntries({
-    content_type: 'navigation',
+    content_type: 'navigationItem',
+    order: ['fields.order'],
   });
-  return entries.items[0];
+  return entries.items;
 }
 
 export async function getPages() {
   const entries = await client.getEntries({
     content_type: 'page',
-    order: ['fields.order'], // ✅ Endret til array
+    order: ['fields.order'],
   });
   return entries.items;
 }
@@ -38,7 +39,7 @@ export async function getHeroSection(id: string) {
 export async function getInfoCards() {
   const entries = await client.getEntries({
     content_type: 'infoCard',
-    order: ['fields.order'], // ✅ Endret til array
+    order: ['fields.order'],
   });
   return entries.items;
 }
@@ -46,7 +47,7 @@ export async function getInfoCards() {
 export async function getEvents() {
   const entries = await client.getEntries({
     content_type: 'event',
-    order: ['fields.order'], // ✅ Endret til array
+    order: ['fields.order'],
   });
   return entries.items;
 }
@@ -55,7 +56,7 @@ export async function getEventsByDay(day: string) {
   const entries = await client.getEntries({
     content_type: 'event',
     'fields.day': day,
-    order: ['fields.order'], // ✅ Endret til array
+    order: ['fields.order'],
   });
   return entries.items;
 }
@@ -79,7 +80,7 @@ export async function getFeaturedEvent() {
 export async function getVendors() {
   const entries = await client.getEntries({
     content_type: 'vendor',
-    order: ['fields.order'], // ✅ Endret til array
+    order: ['fields.order'],
   });
   return entries.items;
 }
@@ -94,7 +95,7 @@ export async function getLocation() {
 export async function getInfoSections() {
   const entries = await client.getEntries({
     content_type: 'infoSection',
-    order: ['fields.order'], // ✅ Endret til array
+    order: ['fields.order'],
   });
   return entries.items;
 }
@@ -102,7 +103,7 @@ export async function getInfoSections() {
 export async function getPracticalInfoItems() {
   const entries = await client.getEntries({
     content_type: 'practicalInfoItem',
-    order: ['fields.order'], // ✅ Endret til array
+    order: ['fields.order'],
   });
   return entries.items;
 }
@@ -110,7 +111,7 @@ export async function getPracticalInfoItems() {
 export async function getByeTournamentInfoSections() {
   const entries = await client.getEntries({
     content_type: 'byeTornamentInfoSection',
-    order: ['fields.order'], // ✅ Endret til array
+    order: ['fields.order'],
   });
   return entries.items;
 }
@@ -118,7 +119,7 @@ export async function getByeTournamentInfoSections() {
 export async function getFAQItems() {
   const entries = await client.getEntries({
     content_type: 'faqItem',
-    order: ['fields.order'], // ✅ Endret til array
+    order: ['fields.order'],
   });
   return entries.items;
 }
@@ -127,7 +128,7 @@ export async function getFAQItemsByCategory(category: string) {
   const entries = await client.getEntries({
     content_type: 'faqItem',
     'fields.category': category,
-    order: ['fields.order'], // ✅ Endret til array
+    order: ['fields.order'],
   });
   return entries.items;
 }
