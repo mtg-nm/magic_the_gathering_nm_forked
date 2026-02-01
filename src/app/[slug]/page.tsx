@@ -1,15 +1,32 @@
 import { getPages, getNavigation } from '@/lib/contentful';
 import { notFound } from 'next/navigation';
 
-export default async function DynamicPage({ params }: { params: { slug: string } }) {
+export default async function DynamicPage({ params }: { params: Promise<{ slug: string }> }) {
   try {
+    // AWAIT params først!
+    const { slug } = await params;
+
     const pages = await getPages();
     const navigation = await getNavigation();
 
-    // Finn siden basert på slug
-    const page = pages.find((p: any) => p.fields.slug === params.slug);
+    // Normalize slug for case-insensitive matching
+    const normalizedSlug = slug.toLowerCase().trim();
+
+    console.log("📍 Looking for slug:", normalizedSlug);
+    console.log("🔍 Available pages:", pages.map((p: any) => ({
+      title: p.fields?.title,
+      slug: p.fields?.slug
+    })));
+
+    // Finn siden basert på slug (case-insensitive)
+    const page = pages.find((p: any) => 
+      p.fields?.slug?.toLowerCase().trim() === normalizedSlug
+    ) as any;
+
+    console.log("📦 Found page:", page ? page?.fields?.title : "NOT FOUND");
 
     if (!page) {
+      console.log("❌ No page found for slug:", normalizedSlug);
       notFound();
     }
 
@@ -27,16 +44,20 @@ export default async function DynamicPage({ params }: { params: { slug: string }
               </div>
               <nav className="nav-menu">
                 {Array.isArray(navigation) &&
-                  navigation.map((item: any) => (
-                    <a
-                      key={item.sys.id}
-                      href={`/${String(item.fields?.slug || item.fields?.url || '')}`}
-                      target={item.fields?.isExternal ? '_blank' : undefined}
-                      className={item.fields?.slug === '' || item.fields?.url === '' ? 'active' : ''}
-                    >
-                      {String(item.fields?.title || item.fields?.label || 'Link')}
-                    </a>
-                  ))}
+                  navigation.map((item: any) => {
+                    const href = item.fields?.url || item.fields?.slug || '/';
+
+                    return (
+                      <a
+                        key={item.sys.id}
+                        href={href}
+                        target={item.fields?.isExternal ? '_blank' : undefined}
+                        className={href === '/' ? 'active' : ''}
+                      >
+                        {String(item.fields?.label || item.fields?.title || 'Link')}
+                      </a>
+                    );
+                  })}
               </nav>
             </div>
           </div>
@@ -44,43 +65,95 @@ export default async function DynamicPage({ params }: { params: { slug: string }
 
         {/* MAIN CONTENT */}
         <main className="main-content">
-          <section className="page-section">
-            <div className="container">
-              {/* TITTEL */}
-              <h1 style={{ 
-                fontSize: '2.5em', 
-                fontWeight: '700', 
-                marginBottom: '20px',
-                color: 'var(--text-light)'
-              }}>
-                {String(page.fields?.title || 'Unavngitt side')}
-              </h1>
+          {/* HERO SECTION */}
+          {page?.fields?.heroSection && (
+            <section className="page-section">
+              <div className="container">
+                <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+                  <h1 style={{ 
+                    fontSize: '3em', 
+                    fontWeight: '700', 
+                    color: 'var(--text-light)', 
+                    marginBottom: '20px', 
+                    lineHeight: '1.1' 
+                  }}>
+                    {String(page?.fields?.heroSection?.fields?.title || page?.fields?.title)}
+                  </h1>
+                  {page?.fields?.heroSection?.fields?.subtitle && (
+                    <p style={{ 
+                      fontSize: '1.2em', 
+                      color: 'var(--text-muted)', 
+                      maxWidth: '700px', 
+                      margin: '0 auto 40px' 
+                    }}>
+                      {String(page?.fields?.heroSection?.fields?.subtitle)}
+                    </p>
+                  )}
+                  {(page?.fields?.heroSection?.fields?.primaryButtonText || page?.fields?.heroSection?.fields?.secondaryButtonText) && (
+                    <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                      {page?.fields?.heroSection?.fields?.primaryButtonText && (
+                        <a 
+                          href={page?.fields?.heroSection?.fields?.primaryButtonLink || '#'} 
+                          className="btn btn-primary"
+                        >
+                          {String(page?.fields?.heroSection?.fields?.primaryButtonText)}
+                        </a>
+                      )}
+                      {page?.fields?.heroSection?.fields?.secondaryButtonText && (
+                        <a 
+                          href={page?.fields?.heroSection?.fields?.secondaryButtonLink || '#'} 
+                          className="btn btn-secondary"
+                        >
+                          {String(page?.fields?.heroSection?.fields?.secondaryButtonText)}
+                        </a>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </section>
+          )}
 
-              {/* BESKRIVELSE */}
-              {page.fields?.description && (
+          {/* PAGE DESCRIPTION */}
+          {page?.fields?.description && (
+            <section className="page-section">
+              <div className="container">
                 <div style={{ 
                   fontSize: '1.1em', 
                   color: 'var(--text-muted)', 
-                  marginBottom: '40px', 
-                  lineHeight: '1.8' 
+                  lineHeight: '1.8',
+                  maxWidth: '900px',
+                  margin: '0 auto'
                 }}>
-                  {String(page.fields.description)}
+                  {String(page?.fields?.description)}
                 </div>
-              )}
+              </div>
+            </section>
+          )}
 
-              {/* HOVEDINNHOLD */}
-              {page.fields?.content && (
+          {/* PAGE CONTENT */}
+          {page?.fields?.content && (
+            <section className="page-section">
+              <div className="container">
                 <div style={{ 
                   color: 'var(--text-muted)', 
                   lineHeight: '1.8',
-                  fontSize: '1.05em'
+                  fontSize: '1.05em',
+                  maxWidth: '900px',
+                  margin: '0 auto'
                 }}>
-                  {String(page.fields.content)}
+                  {String(page?.fields?.content)}
                 </div>
-              )}
+              </div>
+            </section>
+          )}
 
-              {/* HVIS INGEN INNHOLD */}
-              {!page.fields?.description && !page.fields?.content && (
+          {/* HVIS INGEN INNHOLD */}
+          {!page?.fields?.heroSection && 
+            !page?.fields?.description && 
+            !page?.fields?.content && (
+            <section className="page-section">
+              <div className="container">
                 <div style={{ 
                   padding: '40px', 
                   backgroundColor: 'var(--box-primary)',
@@ -90,9 +163,9 @@ export default async function DynamicPage({ params }: { params: { slug: string }
                 }}>
                   <p>Denne siden har ikke noe innhold ennå.</p>
                 </div>
-              )}
-            </div>
-          </section>
+              </div>
+            </section>
+          )}
         </main>
 
         {/* FOOTER */}

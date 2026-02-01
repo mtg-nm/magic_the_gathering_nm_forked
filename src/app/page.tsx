@@ -22,16 +22,20 @@ export default async function Home() {
               </div>
               <nav className="nav-menu">
                 {Array.isArray(navigation) &&
-                  navigation.map((item: any) => (
-                    <a
-                      key={item.sys.id}
-                      href={`/${String(item.fields?.slug || item.fields?.url || '')}`}
-                      target={item.fields?.isExternal ? '_blank' : undefined}
-                      className={item.fields?.slug === '' || item.fields?.url === '' ? 'active' : ''}
-                    >
-                      {String(item.fields?.title || item.fields?.label || 'Link')}
-                    </a>
-                  ))}
+                  navigation.map((item: any) => {
+                    const href = item.fields?.url || item.fields?.slug || '/';
+
+                    return (
+                      <a
+                        key={item.sys.id}
+                        href={href}
+                        target={item.fields?.isExternal ? '_blank' : undefined}
+                        className={href === '/' ? 'active' : ''}
+                      >
+                        {String(item.fields?.label || item.fields?.title || 'Link')}
+                      </a>
+                    );
+                  })}
               </nav>
             </div>
           </div>

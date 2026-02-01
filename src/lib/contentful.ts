@@ -8,134 +8,246 @@ const client = createClient({
 // ===== QUERIES =====
 
 export async function getNavigation() {
-  const entries = await client.getEntries({
-    content_type: 'navigationItem',
-    order: ['fields.order'],
-  });
-  return entries.items;
+  try {
+    const entries = await client.getEntries({
+      content_type: 'navigationItem',
+      order: ['fields.order'],
+    });
+    console.log("✅ getNavigation() returnerer:", entries.items.length, "nav items");
+    return entries.items;
+  } catch (error) {
+    console.error("❌ Feil i getNavigation():", error);
+    return [];
+  }
 }
 
 export async function getPages() {
-  const entries = await client.getEntries({
-    content_type: 'page',
-    order: ['fields.order'],
-  });
-  return entries.items;
+  try {
+    const entries = await client.getEntries({
+      content_type: 'page',
+      order: ['fields.order'],
+    });
+
+    console.log("✅ getPages() returnerer:", entries.items.length, "sider");
+    console.log("📄 Sider:", entries.items.map((p: any) => ({
+      id: p.sys.id,
+      title: p.fields?.title,
+      slug: p.fields?.slug,
+      hasHeroSection: !!p.fields?.heroSection,
+      hasDescription: !!p.fields?.description,
+      hasContent: !!p.fields?.content
+    })));
+
+    return entries.items;
+  } catch (error) {
+    console.error("❌ Feil i getPages():", error);
+    return [];
+  }
 }
 
 export async function getPageBySlug(slug: string) {
-  const entries = await client.getEntries({
-    content_type: 'page',
-    'fields.slug': slug,
-  });
-  return entries.items[0];
+  try {
+    const entries = await client.getEntries({
+      content_type: 'page',
+      'fields.slug': slug,
+    });
+    console.log("✅ getPageBySlug(", slug, ") returnerer:", entries.items.length, "sider");
+    return entries.items[0];
+  } catch (error) {
+    console.error("❌ Feil i getPageBySlug():", error);
+    return null;
+  }
 }
 
 export async function getHeroSection(id: string) {
-  const entry = await client.getEntry(id);
-  return entry;
+  try {
+    const entry = await client.getEntry(id);
+    console.log("✅ getHeroSection() returnerer entry");
+    return entry;
+  } catch (error) {
+    console.error("❌ Feil i getHeroSection():", error);
+    return null;
+  }
 }
 
 export async function getInfoCards() {
-  const entries = await client.getEntries({
-    content_type: 'infoCard',
-    order: ['fields.order'],
-  });
-  return entries.items;
+  try {
+    const entries = await client.getEntries({
+      content_type: 'infoCard',
+      order: ['fields.order'],
+    });
+    console.log("✅ getInfoCards() returnerer:", entries.items.length, "kort");
+    return entries.items;
+  } catch (error) {
+    console.error("❌ Feil i getInfoCards():", error);
+    return [];
+  }
 }
 
 export async function getEvents() {
-  const entries = await client.getEntries({
-    content_type: 'event',
-    order: ['fields.order'],
-  });
-  return entries.items;
+  try {
+    const entries = await client.getEntries({
+      content_type: 'event',
+      order: ['fields.order'],
+    });
+    console.log("✅ getEvents() returnerer:", entries.items.length, "events");
+    return entries.items;
+  } catch (error) {
+    console.error("❌ Feil i getEvents():", error);
+    return [];
+  }
 }
 
 export async function getEventsByDay(day: string) {
-  const entries = await client.getEntries({
-    content_type: 'event',
-    'fields.day': day,
-    order: ['fields.order'],
-  });
-  return entries.items;
+  try {
+    const entries = await client.getEntries({
+      content_type: 'event',
+      'fields.day': day,
+      order: ['fields.order'],
+    });
+    console.log("✅ getEventsByDay(", day, ") returnerer:", entries.items.length, "events");
+    return entries.items;
+  } catch (error) {
+    console.error("❌ Feil i getEventsByDay():", error);
+    return [];
+  }
 }
 
 export async function getEventBySlug(slug: string) {
-  const entries = await client.getEntries({
-    content_type: 'event',
-    'fields.slug': slug,
-  });
-  return entries.items[0];
+  try {
+    const entries = await client.getEntries({
+      content_type: 'event',
+      'fields.slug': slug,
+    });
+    console.log("✅ getEventBySlug(", slug, ") returnerer:", entries.items.length, "events");
+    return entries.items[0];
+  } catch (error) {
+    console.error("❌ Feil i getEventBySlug():", error);
+    return null;
+  }
 }
 
 export async function getFeaturedEvent() {
-  const entries = await client.getEntries({
-    content_type: 'event',
-    'fields.isFeatured': true,
-  });
-  return entries.items[0];
+  try {
+    const entries = await client.getEntries({
+      content_type: 'event',
+      'fields.isFeatured': true,
+    });
+    console.log("✅ getFeaturedEvent() returnerer:", entries.items.length, "featured events");
+    return entries.items[0];
+  } catch (error) {
+    console.error("❌ Feil i getFeaturedEvent():", error);
+    return null;
+  }
 }
 
 export async function getVendors() {
-  const entries = await client.getEntries({
-    content_type: 'vendor',
-    order: ['fields.order'],
-  });
-  return entries.items;
+  try {
+    const entries = await client.getEntries({
+      content_type: 'vendor',
+      order: ['fields.order'],
+    });
+    console.log("✅ getVendors() returnerer:", entries.items.length, "vendors");
+    return entries.items;
+  } catch (error) {
+    console.error("❌ Feil i getVendors():", error);
+    return [];
+  }
 }
 
 export async function getLocation() {
-  const entries = await client.getEntries({
-    content_type: 'location',
-  });
-  return entries.items[0];
+  try {
+    const entries = await client.getEntries({
+      content_type: 'location',
+    });
+    console.log("✅ getLocation() returnerer:", entries.items.length, "locations");
+    return entries.items[0];
+  } catch (error) {
+    console.error("❌ Feil i getLocation():", error);
+    return null;
+  }
 }
 
 export async function getInfoSections() {
-  const entries = await client.getEntries({
-    content_type: 'infoSection',
-    order: ['fields.order'],
-  });
-  return entries.items;
+  try {
+    const entries = await client.getEntries({
+      content_type: 'infoSection',
+      order: ['fields.order'],
+    });
+    console.log("✅ getInfoSections() returnerer:", entries.items.length, "info sections");
+    return entries.items;
+  } catch (error) {
+    console.error("❌ Feil i getInfoSections():", error);
+    return [];
+  }
 }
 
 export async function getPracticalInfoItems() {
-  const entries = await client.getEntries({
-    content_type: 'practicalInfoItem',
-    order: ['fields.order'],
-  });
-  return entries.items;
+  try {
+    const entries = await client.getEntries({
+      content_type: 'practicalInfoItem',
+      order: ['fields.order'],
+    });
+    console.log("✅ getPracticalInfoItems() returnerer:", entries.items.length, "praktiske info items");
+    return entries.items;
+  } catch (error) {
+    console.error("❌ Feil i getPracticalInfoItems():", error);
+    return [];
+  }
 }
 
 export async function getByeTournamentInfoSections() {
-  const entries = await client.getEntries({
-    content_type: 'byeTornamentInfoSection',
-    order: ['fields.order'],
-  });
-  return entries.items;
+  try {
+    const entries = await client.getEntries({
+      content_type: 'byeTornamentInfoSection',
+      order: ['fields.order'],
+    });
+    console.log("✅ getByeTournamentInfoSections() returnerer:", entries.items.length, "bye tournament sections");
+    return entries.items;
+  } catch (error) {
+    console.error("❌ Feil i getByeTournamentInfoSections():", error);
+    return [];
+  }
 }
 
 export async function getFAQItems() {
-  const entries = await client.getEntries({
-    content_type: 'faqItem',
-    order: ['fields.order'],
-  });
-  return entries.items;
+  try {
+    const entries = await client.getEntries({
+      content_type: 'faqItem',
+      order: ['fields.order'],
+    });
+    console.log("✅ getFAQItems() returnerer:", entries.items.length, "FAQ items");
+    return entries.items;
+  } catch (error) {
+    console.error("❌ Feil i getFAQItems():", error);
+    return [];
+  }
 }
 
 export async function getFAQItemsByCategory(category: string) {
-  const entries = await client.getEntries({
-    content_type: 'faqItem',
-    'fields.category': category,
-    order: ['fields.order'],
-  });
-  return entries.items;
+  try {
+    const entries = await client.getEntries({
+      content_type: 'faqItem',
+      'fields.category': category,
+      order: ['fields.order'],
+    });
+    console.log("✅ getFAQItemsByCategory(", category, ") returnerer:", entries.items.length, "FAQ items");
+    return entries.items;
+  } catch (error) {
+    console.error("❌ Feil i getFAQItemsByCategory():", error);
+    return [];
+  }
 }
 
 export async function getCountdownData() {
-  const entries = await client.getEntries({
-    content_type: 'countdownData',
-  });
-  return entries.items[0];
+  try {
+    const entries = await client.getEntries({
+      content_type: 'countdownData',
+    });
+    console.log("✅ getCountdownData() returnerer:", entries.items.length, "countdown data");
+    return entries.items[0];
+  } catch (error) {
+    console.error("❌ Feil i getCountdownData():", error);
+    return null;
+  }
 }
