@@ -1,4 +1,4 @@
-import { getPages, getNavigation } from '@/lib/contentful';
+import { getPages, getNavigation, getEvents, getByeTournamentInfo } from '@/lib/contentful';
 import { notFound } from 'next/navigation';
 
 export default async function DynamicPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -8,6 +8,8 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
 
     const pages = await getPages();
     const navigation = await getNavigation();
+    const events = await getEvents();
+    const byeTournamentInfo = await getByeTournamentInfo();
 
     // Normalize slug for case-insensitive matching
     const normalizedSlug = slug.toLowerCase().trim();
@@ -29,6 +31,13 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
       console.log("❌ No page found for slug:", normalizedSlug);
       notFound();
     }
+
+    // DEBUG: Log byeTournamentInfo data
+    console.log("🔍 byeTournamentInfo data:", byeTournamentInfo.map((item: any) => ({
+      id: item.sys.id,
+      title: item.fields?.title,
+      allFields: Object.keys(item.fields || {})
+    })));
 
     return (
       <>
@@ -148,10 +157,90 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
             </section>
           )}
 
+          {/* EVENTS SECTION - VIS PÅ FULLT-PROGRAM */}
+          {normalizedSlug === 'fullt-program' && Array.isArray(events) && events.length > 0 && (
+            <section className="page-section">
+              <div className="container">
+                <div className="section-header">
+                  <h2>📅 Arrangementer ({events.length})</h2>
+                  <p>Alt som skjer under Norgesmesterskapet</p>
+                </div>
+                <div className="grid-2">
+                  {events.map((event: any) => (
+                    <div
+                      key={event.sys.id}
+                      className="content-box-blue"
+                    >
+                      <h3 style={{ color: '#7bc4f0', marginBottom: '12px' }}>
+                        {String(event.fields?.title || 'Unavngitt arrangement')}
+                      </h3>
+                      {event.fields?.day && (
+                        <p style={{ margin: '8px 0', color: 'var(--text-muted)' }}>
+                          <strong>📆 Dag:</strong> {String(event.fields.day)}
+                        </p>
+                      )}
+                      {event.fields?.time && (
+                        <p style={{ margin: '8px 0', color: 'var(--text-muted)' }}>
+                          <strong>🕐 Tid:</strong> {String(event.fields.time)}
+                        </p>
+                      )}
+                      {event.fields?.description && typeof event.fields.description === 'string' && (
+                        <p style={{ margin: '12px 0 0 0', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                          {event.fields.description}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* BYE TOURNAMENT INFO SECTION - VIS PÅ BYE-TURNERINGE */}
+          {normalizedSlug === 'bye-turneringer' && Array.isArray(byeTournamentInfo) && byeTournamentInfo.length > 0 && (
+            <section className="page-section">
+              <div className="container">
+                <div className="section-header">
+                  <h2>🏆 Bye-turneringer ({byeTournamentInfo.length})</h2>
+                  <p>Informasjon om alle bye-turneringene</p>
+                </div>
+                <div className="grid-2">
+                  {byeTournamentInfo.map((item: any) => (
+                    <div
+                      key={item.sys.id}
+                      className="content-box-blue"
+                    >
+                      <h3 style={{ color: '#7bc4f0', marginBottom: '12px' }}>
+                        {String(item.fields?.title || 'Unavngitt turnering')}
+                      </h3>
+                      {item.fields?.description && (
+                        <p style={{ margin: '12px 0', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                          {String(item.fields.description)}
+                        </p>
+                      )}
+                      {item.fields?.format && (
+                        <p style={{ margin: '8px 0', color: 'var(--text-muted)' }}>
+                          <strong>Format:</strong> {String(item.fields.format)}
+                        </p>
+                      )}
+                      {item.fields?.rounds && (
+                        <p style={{ margin: '8px 0', color: 'var(--text-muted)' }}>
+                          <strong>Runder:</strong> {String(item.fields.rounds)}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
           {/* HVIS INGEN INNHOLD */}
           {!page?.fields?.heroSection && 
             !page?.fields?.description && 
-            !page?.fields?.content && (
+            !page?.fields?.content && 
+            !(normalizedSlug === 'fullt-program' && Array.isArray(events) && events.length > 0) &&
+            !(normalizedSlug === 'bye-turneringer' && Array.isArray(byeTournamentInfo) && byeTournamentInfo.length > 0) && (
             <section className="page-section">
               <div className="container">
                 <div style={{ 
@@ -172,14 +261,8 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
         <footer className="footer">
           <div className="container">
             <div className="footer-content">
-              <div className="footer-brand">Norgesmesterskapet i Magic: The Gathering 2025</div>
+              <div className="footer-brand">NM Magic 2025</div>
               <div>Pilestredet 52 - Studenthuset, OsloMet • 7-9 august 2025</div>
-              <div className="footer-links">
-                <a href="/">Hjem</a>
-                <a href="/events">Events</a>
-                <a href="/info">Info</a>
-                <a href="https://discord.com/invite/7UtayJsGBB" target="_blank">Discord</a>
-              </div>
             </div>
           </div>
         </footer>

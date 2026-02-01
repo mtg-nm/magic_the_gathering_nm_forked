@@ -1,10 +1,9 @@
-import { getPages, getNavigation, getEvents, getVendors, getLocation } from '@/lib/contentful';
+import { getPages, getNavigation, getVendors, getLocation } from '@/lib/contentful';
 
 export default async function Home() {
   try {
     const navigation = await getNavigation();
     const pages = await getPages();
-    const events = await getEvents();
     const vendors = await getVendors();
     const location = await getLocation();
 
@@ -16,7 +15,7 @@ export default async function Home() {
             <div className="header-content">
               <div className="header-left">
                 <div className="header-title">
-                  <h1>NM Magic 2026</h1>
+                  <h1>NM Magic 2025</h1>
                   <p>Norgesmesterskapet i Magic: The Gathering</p>
                 </div>
               </div>
@@ -51,10 +50,10 @@ export default async function Home() {
                   ⚔️ Norgesmesterskapet i Magic: The Gathering
                 </h1>
                 <p style={{ fontSize: '1.2em', color: 'var(--text-muted)', maxWidth: '700px', margin: '0 auto 40px' }}>
-                  Norges største Magic-turnering 7-9 august 2026. Slåss om tittelen som Norgesmester!
+                  Norges største Magic-turnering 7-9 august 2025. Slåss om tittelen som Norgesmester!
                 </p>
                 <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                  <a href="#events" className="btn btn-primary">📅 Alle Events</a>
+                  <a href="/fullt-program" className="btn btn-primary">📅 Alle Events</a>
                   <a href="#info" className="btn btn-secondary">📖 Les mer</a>
                 </div>
               </div>
@@ -65,7 +64,7 @@ export default async function Home() {
           <section className="page-section">
             <div className="container">
               <div className="section-header">
-                <h2>Om NM 2026</h2>
+                <h2>Om NM 2025</h2>
                 <p>Alt du trenger å vite om Norgesmesterskapet</p>
               </div>
               <div className="info-cards">
@@ -77,7 +76,7 @@ export default async function Home() {
                 <div className="info-card">
                   <div className="info-card-icon">📅</div>
                   <h3>Dato</h3>
-                  <p>7-9 august 2026</p>
+                  <p>7-9 august 2025</p>
                 </div>
                 <div className="info-card">
                   <div className="info-card-icon">🏆</div>
@@ -87,45 +86,6 @@ export default async function Home() {
               </div>
             </div>
           </section>
-
-          {/* EVENTS SECTION */}
-          {Array.isArray(events) && events.length > 0 && (
-            <section className="page-section" id="events">
-              <div className="container">
-                <div className="section-header">
-                  <h2>📅 Arrangementer ({events.length})</h2>
-                  <p>Alt som skjer under Norgesmesterskapet</p>
-                </div>
-                <div className="grid-2">
-                  {events.map((event: any) => (
-                    <div
-                      key={event.sys.id}
-                      className="content-box-blue"
-                    >
-                      <h3 style={{ color: '#7bc4f0', marginBottom: '12px' }}>
-                        {String(event.fields?.title || 'Unavngitt arrangement')}
-                      </h3>
-                      {event.fields?.day && (
-                        <p style={{ margin: '8px 0', color: 'var(--text-muted)' }}>
-                          <strong>📆 Dag:</strong> {String(event.fields.day)}
-                        </p>
-                      )}
-                      {event.fields?.time && (
-                        <p style={{ margin: '8px 0', color: 'var(--text-muted)' }}>
-                          <strong>🕐 Tid:</strong> {String(event.fields.time)}
-                        </p>
-                      )}
-                      {event.fields?.description && typeof event.fields.description === 'string' && (
-                        <p style={{ margin: '12px 0 0 0', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                          {event.fields.description}
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-          )}
 
           {/* PAGES SECTION */}
           {Array.isArray(pages) && pages.length > 0 && (
@@ -256,11 +216,8 @@ export default async function Home() {
         <footer className="footer">
           <div className="container">
             <div className="footer-content">
-              <div className="footer-brand">Norgesmesterskapet i Magic: The Gathering 2026</div>
-              <div>Pilestredet 52 - Studenthuset, OsloMet • 7-9 august 2026</div>
-              <div className="footer-links">
-                <a href="https://discord.com/invite/7UtayJsGBB" target="_blank">Discord</a>
-              </div>
+              <div className="footer-brand">NM Magic 2025</div>
+              <div>Pilestredet 52 - Studenthuset, OsloMet • 7-9 august 2025</div>
             </div>
           </div>
         </footer>

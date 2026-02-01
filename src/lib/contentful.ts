@@ -210,6 +210,20 @@ export async function getByeTournamentInfoSections() {
   }
 }
 
+export async function getByeTournamentInfo() {
+  try {
+    const entries = await client.getEntries({
+      content_type: 'byeTornamentInfoSection',
+      order: ['fields.order'],
+    });
+    console.log("✅ getByeTournamentInfo() returnerer:", entries.items.length, "bye tournament info");
+    return entries.items;
+  } catch (error) {
+    console.error("❌ Feil i getByeTournamentInfo():", error);
+    return [];
+  }
+}
+
 export async function getFAQItems() {
   try {
     const entries = await client.getEntries({
