@@ -16,7 +16,7 @@ export default async function Home() {
             <div className="header-content">
               <div className="header-left">
                 <div className="header-title">
-                  <h1>NM Magic 2025</h1>
+                  <h1>NM Magic 2026</h1>
                   <p>Norgesmesterskapet i Magic: The Gathering</p>
                 </div>
               </div>
@@ -51,7 +51,7 @@ export default async function Home() {
                   ⚔️ Norgesmesterskapet i Magic: The Gathering
                 </h1>
                 <p style={{ fontSize: '1.2em', color: 'var(--text-muted)', maxWidth: '700px', margin: '0 auto 40px' }}>
-                  Norges største Magic-turnering 7-9 august 2025. Slåss om tittelen som Norgesmester!
+                  Norges største Magic-turnering 7-9 august 2026. Slåss om tittelen som Norgesmester!
                 </p>
                 <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
                   <a href="#events" className="btn btn-primary">📅 Alle Events</a>
@@ -65,7 +65,7 @@ export default async function Home() {
           <section className="page-section">
             <div className="container">
               <div className="section-header">
-                <h2>Om NM 2025</h2>
+                <h2>Om NM 2026</h2>
                 <p>Alt du trenger å vite om Norgesmesterskapet</p>
               </div>
               <div className="info-cards">
@@ -77,7 +77,7 @@ export default async function Home() {
                 <div className="info-card">
                   <div className="info-card-icon">📅</div>
                   <h3>Dato</h3>
-                  <p>7-9 august 2025</p>
+                  <p>7-9 august 2026</p>
                 </div>
                 <div className="info-card">
                   <div className="info-card-icon">🏆</div>
@@ -204,7 +204,7 @@ export default async function Home() {
                   <p>Pilestredet 52, 0169 Oslo - 10 minutter fra Oslo Slott</p>
                 </div>
                 <div className="content-box-green" style={{ marginTop: '40px' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
                     <div>
                       <h3 style={{ color: '#9effc0', marginBottom: '12px' }}>📍 Adresse</h3>
                       {location.fields.name && (
@@ -256,12 +256,9 @@ export default async function Home() {
         <footer className="footer">
           <div className="container">
             <div className="footer-content">
-              <div className="footer-brand">Norgesmesterskapet i Magic: The Gathering 2025</div>
-              <div>Pilestredet 52 - Studenthuset, OsloMet • 7-9 august 2025</div>
+              <div className="footer-brand">Norgesmesterskapet i Magic: The Gathering 2026</div>
+              <div>Pilestredet 52 - Studenthuset, OsloMet • 7-9 august 2026</div>
               <div className="footer-links">
-                <a href="/">Hjem</a>
-                <a href="/events">Events</a>
-                <a href="/info">Info</a>
                 <a href="https://discord.com/invite/7UtayJsGBB" target="_blank">Discord</a>
               </div>
             </div>
