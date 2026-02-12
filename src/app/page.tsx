@@ -19,7 +19,7 @@ export default async function Home() {
             <div className="header-content">
               <div className="header-left">
                 <div className="header-title">
-                  <h1>NM Magic 2025</h1>
+                  <h1>NM Magic 2026</h1>
                   <p>Norgesmesterskapet i Magic: The Gathering</p>
                 </div>
               </div>
@@ -58,34 +58,7 @@ export default async function Home() {
                 </p>
                 <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
                   <a href="/fullt-program" className="btn btn-primary">📅 Alle Events</a>
-                  <a href="#om-nm" className="btn btn-secondary">📖 Les mer</a>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* INFO CARDS - Om NM 2026 */}
-          <section className="page-section" id="om-nm">
-            <div className="container">
-              <div className="section-header">
-                <h2>Om NM 2026</h2>
-                <p>Alt du trenger å vite om Norgesmesterskapet</p>
-              </div>
-              <div className="info-cards">
-                <div className="info-card">
-                  <div className="info-card-icon">📍</div>
-                  <h3>Lokasjon</h3>
-                  <p>Pilestredet 52 - Studenthuset, OsloMet</p>
-                </div>
-                <div className="info-card">
-                  <div className="info-card-icon">📅</div>
-                  <h3>Dato</h3>
-                  <p>7-9 August 2025</p>
-                </div>
-                <div className="info-card">
-                  <div className="info-card-icon">🏆</div>
-                  <h3>Premier</h3>
-                  <p>Store Premier!</p>
+                  <a href="#velkommen-nm" className="btn btn-secondary">📖 Les mer</a>
                 </div>
               </div>
             </div>
@@ -127,156 +100,126 @@ export default async function Home() {
             </section>
           )}
 
-          {/* ALT SOM SKJER I HELGEN */}
-          <section className="page-section">
+          {/* VELKOMMEN TIL NM */}
+          <section className="page-section" id="velkommen-nm">
             <div className="container">
               <div className="section-header">
-                <h2>Alt som skjer i helgen</h2>
-                <p>Hovedturneringen, side events og mer</p>
+                <h2>Velkommen til Magic The Gathering Norgesmesterskap</h2>
               </div>
-              <div className="grid-2">
-                <div className="content-box-teal">
-                  <h3 style={{ color: '#6ee8dd', marginBottom: '12px' }}>
-                    🎯 Norgesmesterskapet - Magic: The Gathering
-                  </h3>
-                  <p style={{ margin: '0', color: 'var(--text-muted)', marginBottom: '15px', lineHeight: '1.6' }}>
-                    Lørdag 8. august 09:00. Slåss om tittelen som Norgesmester 2026. Draft + Modern. 128 deltakere, 3 Runder Draft → Swiss → Top 8.
-                  </p>
-                  <a href="/fullt-program" className="btn btn-primary">Les mer →</a>
+
+              {/* NORGESMESTERSKAPET - HOVEDEVENT */}
+              <div className="content-box-blue" style={{ marginTop: '30px', marginBottom: '40px' }}>
+                <h3 style={{ color: '#7bc4f0', marginBottom: '15px', fontSize: '1.3em' }}>
+                  🎯 Norgesmesterskapet - Magic: The Gathering
+                </h3>
+                <p style={{ margin: '0', color: 'var(--text-muted)', marginBottom: '20px', lineHeight: '1.8', fontSize: '1.05em' }}>
+                  Lørdag 8. august 09:00. Slåss om tittelen som Norgesmester 2026. Draft + Modern. 128 deltakere, 3 Runder Draft → Swiss → Top 8.
+                </p>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px', marginBottom: '20px' }}>
+                  <div>
+                    <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>📅 DAG</p>
+                    <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>Lørdag 8. august</p>
+                  </div>
+                  <div>
+                    <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>🕐 TID</p>
+                    <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>09:00</p>
+                  </div>
+                  <div>
+                    <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>📋 FORMAT</p>
+                    <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>Draft + Modern</p>
+                  </div>
+                  <div>
+                    <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>👥 DELTAKERE</p>
+                    <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>128</p>
+                  </div>
                 </div>
 
-                <div className="content-box-teal">
-                  <h3 style={{ color: '#6ee8dd', marginBottom: '12px' }}>
-                    📋 Standard Grand Challenge
-                  </h3>
-                  <p style={{ margin: '0', color: 'var(--text-muted)', marginBottom: '15px', lineHeight: '1.6' }}>
-                    Søndag 09:00. Storstilt Standard-turnering begrenset til 64 deltakere. Høyt konkurransenivå og attraktive premier.
+                <div style={{ padding: '15px', backgroundColor: 'rgba(94, 179, 230, 0.1)', borderRadius: '8px', marginBottom: '20px', borderLeft: '3px solid #7bc4f0' }}>
+                  <p style={{ margin: '0', color: 'var(--text-muted)' }}>
+                    <strong>Format:</strong> 3 Runder Draft → Swiss → Top 8
                   </p>
-                  <a href="/fullt-program" className="btn btn-primary">Les mer →</a>
                 </div>
 
-                <div className="content-box-teal">
-                  <h3 style={{ color: '#6ee8dd', marginBottom: '12px' }}>
-                    🃏 Chaos Draft
-                  </h3>
-                  <p style={{ margin: '0', color: 'var(--text-muted)', marginBottom: '15px', lineHeight: '1.6' }}>
-                    Fredag 16:30. Bli med på Norges største Chaos Draft med pakker fra 30 forskjellige sett! Dritartig og avslappet event.
-                  </p>
-                  <a href="/fullt-program" className="btn btn-primary">Les mer →</a>
-                </div>
-
-                <div className="content-box-teal">
-                  <h3 style={{ color: '#6ee8dd', marginBottom: '12px' }}>
-                    🎲 Last Chance Bye-Turnering
-                  </h3>
-                  <p style={{ margin: '0', color: 'var(--text-muted)', marginBottom: '15px', lineHeight: '1.6' }}>
-                    Fredag 16:30. Siste sjanse til å vinne bye til hovedturneringen! Modern format.
-                  </p>
-                  <a href="/bye-turneringer" className="btn btn-primary">Les mer →</a>
-                </div>
-              </div>
-              <div style={{ marginTop: '30px', padding: '20px', backgroundColor: 'var(--box-primary)', borderRadius: '8px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                <p><strong>Side-Events:</strong> Flere turneringer i Legacy, Pauper, og mer. Mange runder med Draft. Mer info kommer…</p>
+                <a href="/fullt-program" className="btn btn-primary" style={{ width: '100%', textAlign: 'center' }}>
+                  📅 Se fullt program
+                </a>
               </div>
             </div>
           </section>
 
-          {/* PAGES/INFO SECTION */}
-          {Array.isArray(pages) && pages.length > 0 && (
-            <section className="page-section">
-              <div className="container">
-                <div className="section-header">
-                  <h2>💡 Info</h2>
-                  <p>Praktisk informasjon og annet du trenger å vite</p>
-                </div>
-                <div className="grid-2">
-                  <div className="content-box-purple">
-                    <h3 style={{ color: '#dd99ff', marginBottom: '12px' }}>
-                      🏠 Praktisk Informasjon
-                    </h3>
-                    <p style={{ margin: '0', color: 'var(--text-muted)', marginBottom: '15px', lineHeight: '1.6' }}>
-                      Reise, overnatting, mat og andre praktiske detaljer for turneringshelgen.
-                    </p>
-                    <a href="/praktisk-info" className="btn btn-primary">Les mer →</a>
-                  </div>
+          {/* PRAKTISK INFORMASJON BOLK */}
+          <section className="page-section">
+            <div className="container">
+              <div className="section-header">
+                <h2>🏠 Praktisk Informasjon</h2>
+                <p>Reise, overnatting, mat og andre praktiske detaljer for turneringshelgen</p>
+              </div>
 
-                  <div className="content-box-purple">
-                    <h3 style={{ color: '#dd99ff', marginBottom: '12px' }}>
-                      🛍️ Vendors & Handlestedier
-                    </h3>
-                    <p style={{ margin: '0', color: 'var(--text-muted)', marginBottom: '15px', lineHeight: '1.6' }}>
-                      Se hvilke vendors som kommer og hvilke kort og produkter som vil være tilgjengelig.
-                    </p>
-                    <a href="/vendors" className="btn btn-primary">Les mer →</a>
-                  </div>
+              <div className="grid-2">
+                {/* LOKASJON & ADRESSE */}
+                <div className="content-box-green">
+                  <h3 style={{ color: '#9effc0', marginBottom: '15px' }}>📍 Lokasjon & Adresse</h3>
+                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
+                    <strong>Studenthuset, OsloMet</strong>
+                  </p>
+                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
+                    Pilestredet 52, 0169 Oslo
+                  </p>
+                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
+                    ~10 min fra Oslo Slott
+                  </p>
+                </div>
+
+                {/* TRANSPORT TIL LOKASJON */}
+                <div className="content-box-green">
+                  <h3 style={{ color: '#9effc0', marginBottom: '15px' }}>🚗 Transport</h3>
+                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
+                    <strong>T-banen:</strong> Hausmanns gate (5 min gange)
+                  </p>
+                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
+                    <strong>Buss:</strong> Linjer 20, 21, 32
+                  </p>
+                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
+                    <strong>Parkering:</strong> Tilgjengelig på området
+                  </p>
+                </div>
+
+                {/* OVERNATTING */}
+                <div className="content-box-green">
+                  <h3 style={{ color: '#9effc0', marginBottom: '15px' }}>🏨 Overnatting</h3>
+                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
+                    <strong>Hostel:</strong> Budsjettpriser i sentrum
+                  </p>
+                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
+                    <strong>Hotell:</strong> 3-5 stjerner rundt Slottet
+                  </p>
+                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
+                    <strong>Airbnb:</strong> Leiligheter å leie
+                  </p>
+                </div>
+
+                {/* MAT & DRIKKE */}
+                <div className="content-box-green">
+                  <h3 style={{ color: '#9effc0', marginBottom: '15px' }}>🍽️ Mat & Drikke</h3>
+                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
+                    Coop Mega rett over veien
+                  </p>
+                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
+                    Mange kafeer og restauranter i nærheten
+                  </p>
                 </div>
               </div>
-            </section>
-          )}
+            </div>
+          </section>
 
-          {/* LOCATION SECTION */}
-          {location && location.fields && (
-            <section className="page-section">
-              <div className="container">
-                <div className="section-header">
-                  <h2>📍 Hvor finner vi Studenthuset?</h2>
-                  <p>Pilestredet 52, 0169 Oslo - 10 minutter fra Oslo Slott</p>
-                </div>
-                <div className="content-box-green" style={{ marginTop: '40px' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
-                    <div>
-                      <h3 style={{ color: '#9effc0', marginBottom: '12px' }}>📍 Adresse</h3>
-                      {location.fields.name && (
-                        <p style={{ margin: '5px 0', color: 'var(--text-muted)' }}>
-                          <strong>{String(location.fields.name)}</strong>
-                        </p>
-                      )}
-                      {location.fields.address && (
-                        <p style={{ margin: '5px 0', color: 'var(--text-muted)' }}>
-                          {String(location.fields.address)}
-                        </p>
-                      )}
-                      {(location.fields.city || location.fields.postalCode) && (
-                        <p style={{ margin: '5px 0', color: 'var(--text-muted)' }}>
-                          {location.fields.city ? String(location.fields.city) : ''}{' '}
-                          {location.fields.postalCode ? String(location.fields.postalCode) : ''}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <h3 style={{ color: '#9effc0', marginBottom: '12px' }}>🚇 Kollektivtransport</h3>
-                      <p style={{ margin: '5px 0', color: 'var(--text-muted)' }}>
-                        T-banen: Hausmanns gate stasjon
-                      </p>
-                      <p style={{ margin: '5px 0', color: 'var(--text-muted)' }}>
-                        Buss: Linjer 20, 21 og 32
-                      </p>
-                      <p style={{ margin: '5px 0', color: 'var(--text-muted)' }}>
-                        ~10 min gange fra Slottet
-                      </p>
-                    </div>
-                    <div>
-                      <h3 style={{ color: '#9effc0', marginBottom: '12px' }}>🅿️ Parkering</h3>
-                      <p style={{ margin: '5px 0', color: 'var(--text-muted)' }}>
-                        Parkering tilgjengelig på området
-                      </p>
-                      <p style={{ margin: '5px 0', color: 'var(--text-muted)' }}>
-                        Innmarka og Ferner parkeringshus i nærheten
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          )}
-
-          {/* VENDORS SECTION */}
+          {/* VENDORS & HANDLESTEDIER BOLK */}
           {Array.isArray(vendors) && vendors.length > 0 && (
             <section className="page-section">
               <div className="container">
                 <div className="section-header">
-                  <h2>🛍️ Leverandører ({vendors.length})</h2>
-                  <p>Kort og produkter fra ledende forhandlere</p>
+                  <h2>🛍️ Vendors</h2>
+                  <p>Se hvilke vendors som kommer og hvilke kort og produkter som vil være tilgjengelig</p>
                 </div>
                 <div className="grid-3">
                   {vendors.map((vendor: any) => (
@@ -300,14 +243,66 @@ export default async function Home() {
               </div>
             </section>
           )}
+
+          {/* SJEKKLISTE & REGLER */}
+          <section className="page-section">
+            <div className="container">
+              <div className="section-header">
+                <h2>📋 Sjekkliste & Regler</h2>
+              </div>
+
+              <div className="grid-2">
+                {/* SJEKKLISTE */}
+                <div className="content-box-blue">
+                  <h3 style={{ color: '#7bc4f0', marginBottom: '15px' }}>📋 Sjekkliste</h3>
+                  <ul style={{ margin: '0', paddingLeft: '20px', color: 'var(--text-muted)', fontSize: '0.95em' }}>
+                    <li style={{ margin: '8px 0' }}>Bring ditt dekk</li>
+                    <li style={{ margin: '8px 0' }}>Penger eller kort</li>
+                    <li style={{ margin: '8px 0' }}>Notepad og penn</li>
+                    <li style={{ margin: '8px 0' }}>Komfortabel klær</li>
+                    <li style={{ margin: '8px 0' }}>Powerbank</li>
+                  </ul>
+                </div>
+
+                {/* TURNERINGSREGLER */}
+                <div className="content-box-blue">
+                  <h3 style={{ color: '#7bc4f0', marginBottom: '15px' }}>⚠️ Turneringsregler</h3>
+                  <ul style={{ margin: '0', paddingLeft: '20px', color: 'var(--text-muted)', fontSize: '0.95em' }}>
+                    <li style={{ margin: '8px 0' }}>Registrer deg før start</li>
+                    <li style={{ margin: '8px 0' }}>Sjekk formatkrav</li>
+                    <li style={{ margin: '8px 0' }}>Respektfull oppførsel</li>
+                    <li style={{ margin: '8px 0' }}>Sjekk startliste</li>
+                    <li style={{ margin: '8px 0' }}>Kom 15 min før start</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* KONTAKT & SPØRSMÅL */}
+          <section className="page-section">
+            <div className="container">
+              <div className="section-header">
+                <h2>❓ Spørsmål?</h2>
+              </div>
+              <div className="content-box-teal" style={{ textAlign: 'center' }}>
+                <p style={{ margin: '10px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
+                  Kontakt oss på Discord • E-post: <strong>mtgnm.styret@gmail.com</strong>
+                </p>
+                <a href="#" className="btn btn-primary" style={{ marginTop: '15px' }}>
+                  🎮 Join Discord
+                </a>
+              </div>
+            </div>
+          </section>
         </main>
 
         {/* FOOTER */}
         <footer className="footer">
           <div className="container">
             <div className="footer-content">
-              <div className="footer-brand">NM Magic 2025</div>
-              <div>Pilestredet 52 - Studenthuset, OsloMet • 7-9 august 2025</div>
+              <div className="footer-brand">NM Magic 2026</div>
+              <div>Pilestredet 52 - Studenthuset, OsloMet • 7-9 august 2026</div>
             </div>
           </div>
         </footer>

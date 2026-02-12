@@ -58,13 +58,14 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
                 {Array.isArray(navigation) &&
                   navigation.map((item: any) => {
                     const href = item.fields?.url || item.fields?.slug || '/';
+                    const isActive = normalizedSlug === (item.fields?.slug?.toLowerCase().trim() || '');
 
                     return (
                       <a
                         key={item.sys.id}
                         href={href}
                         target={item.fields?.isExternal ? '_blank' : undefined}
-                        className={href === '/' ? 'active' : ''}
+                        className={isActive ? 'active' : ''}
                       >
                         {String(item.fields?.label || item.fields?.title || 'Link')}
                       </a>
@@ -77,8 +78,8 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
 
         {/* MAIN CONTENT */}
         <main className="main-content">
-          {/* HERO SECTION */}
-          {page?.fields?.heroSection && (
+          {/* HERO SECTION - IKKE VIS PÅ FULLT-PROGRAM OG BYE-TURNERINGER */}
+          {page?.fields?.heroSection && normalizedSlug !== 'fullt-program' && normalizedSlug !== 'bye-turneringer' && (
             <section className="page-section">
               <div className="container">
                 <div style={{ textAlign: 'center', marginBottom: '60px' }}>
@@ -126,8 +127,8 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
             </section>
           )}
 
-          {/* PAGE DESCRIPTION */}
-          {page?.fields?.description && (
+          {/* PAGE DESCRIPTION - IKKE VIS PÅ FULLT-PROGRAM OG BYE-TURNERINGER */}
+          {page?.fields?.description && normalizedSlug !== 'fullt-program' && normalizedSlug !== 'bye-turneringer' && (
             <section className="page-section">
               <div className="container">
                 <div style={{ 
@@ -164,10 +165,30 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
           {normalizedSlug === 'fullt-program' && Array.isArray(events) && events.length > 0 && (
             <section className="page-section">
               <div className="container">
-                <div className="section-header">
-                  <h2>📅 Arrangementer ({events.length})</h2>
-                  <p>Alt som skjer under Norgesmesterskapet</p>
+                {/* HEADER MED LITEN BOKS */}
+                <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+                  <h2 style={{ 
+                    fontSize: '2.5em', 
+                    fontWeight: '700', 
+                    color: 'var(--text-light)', 
+                    marginBottom: '20px' 
+                  }}>
+                    📅 Fullt Program
+                  </h2>
+                  <div style={{
+                    display: 'inline-block',
+                    backgroundColor: 'var(--box-primary)',
+                    border: '1px solid #7bc4f0',
+                    borderRadius: '8px',
+                    padding: '12px 24px',
+                    color: 'var(--text-muted)',
+                    fontSize: '1em'
+                  }}>
+                    Alt som skjer under Norgesmesterskapet
+                  </div>
                 </div>
+
+                {/* EVENTS GRID */}
                 <div className="grid-2">
                   {events.map((event: any) => (
                     <div
@@ -213,10 +234,30 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
           {normalizedSlug === 'bye-turneringer' && Array.isArray(byeTournamentInfo) && byeTournamentInfo.length > 0 && (
             <section className="page-section">
               <div className="container">
-                <div className="section-header">
-                  <h2>🏆 Bye-turneringer ({byeTournamentInfo.length})</h2>
-                  <p>Informasjon om alle bye-turneringene</p>
+                {/* HEADER MED LITEN BOKS */}
+                <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+                  <h2 style={{ 
+                    fontSize: '2.5em', 
+                    fontWeight: '700', 
+                    color: 'var(--text-light)', 
+                    marginBottom: '20px' 
+                  }}>
+                    🏆 Bye-turneringer
+                  </h2>
+                  <div style={{
+                    display: 'inline-block',
+                    backgroundColor: 'var(--box-primary)',
+                    border: '1px solid #7bc4f0',
+                    borderRadius: '8px',
+                    padding: '12px 24px',
+                    color: 'var(--text-muted)',
+                    fontSize: '1em'
+                  }}>
+                    Siste sjanse til å vinne bye til Norgesmesterskapet
+                  </div>
                 </div>
+
+                {/* BYE TOURNAMENTS GRID */}
                 <div className="grid-2">
                   {byeTournamentInfo.map((item: any) => (
                     <div
