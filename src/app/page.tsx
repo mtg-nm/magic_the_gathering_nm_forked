@@ -1,11 +1,15 @@
-import { getPages, getNavigation, getVendors, getLocation } from '@/lib/contentful';
+import { getPages, getNavigation, getEvents, getVendors, getLocation } from '@/lib/contentful';
 
 export default async function Home() {
   try {
     const navigation = await getNavigation();
     const pages = await getPages();
+    const events = await getEvents();
     const vendors = await getVendors();
     const location = await getLocation();
+
+    // Finn hovedturneringen (featured event)
+    const mainEvent = events.find((e: any) => e.fields?.title?.includes('Norgesmesterskapet') && e.fields?.day?.includes('8'));
 
     return (
       <>
@@ -50,21 +54,21 @@ export default async function Home() {
                   ⚔️ Norgesmesterskapet i Magic: The Gathering
                 </h1>
                 <p style={{ fontSize: '1.2em', color: 'var(--text-muted)', maxWidth: '700px', margin: '0 auto 40px' }}>
-                  Norges største Magic-turnering 7-9 august 2025. Slåss om tittelen som Norgesmester!
+                  Norges største Magic-turnering 7-9 august 2026. Slåss om tittelen som Norgesmester!
                 </p>
                 <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
                   <a href="/fullt-program" className="btn btn-primary">📅 Alle Events</a>
-                  <a href="#info" className="btn btn-secondary">📖 Les mer</a>
+                  <a href="#om-nm" className="btn btn-secondary">📖 Les mer</a>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* INFO CARDS */}
-          <section className="page-section">
+          {/* INFO CARDS - Om NM 2026 */}
+          <section className="page-section" id="om-nm">
             <div className="container">
               <div className="section-header">
-                <h2>Om NM 2025</h2>
+                <h2>Om NM 2026</h2>
                 <p>Alt du trenger å vite om Norgesmesterskapet</p>
               </div>
               <div className="info-cards">
@@ -76,80 +80,135 @@ export default async function Home() {
                 <div className="info-card">
                   <div className="info-card-icon">📅</div>
                   <h3>Dato</h3>
-                  <p>7-9 august 2025</p>
+                  <p>7-9 August 2025</p>
                 </div>
                 <div className="info-card">
                   <div className="info-card-icon">🏆</div>
                   <h3>Premier</h3>
-                  <p>Store premier + 10 000kr fra OMF</p>
+                  <p>Store Premier!</p>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* PAGES SECTION */}
-          {Array.isArray(pages) && pages.length > 0 && (
-            <section className="page-section" id="info">
+          {/* FEATURED EVENT - Hovedturneringen */}
+          {mainEvent && (
+            <section className="page-section">
               <div className="container">
                 <div className="section-header">
-                  <h2>📄 Informasjon ({pages.length})</h2>
-                  <p>Praktisk info og detaljer</p>
+                  <h2>🎯 Norgesmesterskapet i Magic: The Gathering</h2>
+                  <p>Hovedturneringen arrangeres lørdag 8. august 2026</p>
                 </div>
-                <div className="grid-2">
-                  {pages.map((page: any) => (
-                    <div
-                      key={page.sys.id}
-                      className="content-box-teal"
-                    >
-                      <h3 style={{ color: '#6ee8dd', marginBottom: '12px' }}>
-                        {String(page.fields?.title || 'Unavngitt side')}
-                      </h3>
-                      {page.fields?.description && typeof page.fields.description === 'string' && (
-                        <p style={{ margin: '0', color: 'var(--text-muted)', marginBottom: '15px', lineHeight: '1.6' }}>
-                          {page.fields.description}
-                        </p>
-                      )}
-                      {page.fields?.slug && (
-                        <a
-                          href={`/${String(page.fields.slug)}`}
-                          className="btn btn-primary"
-                        >
-                          Les mer →
-                        </a>
-                      )}
+                <div className="content-box-blue" style={{ marginTop: '40px' }}>
+                  <p style={{ marginBottom: '20px', color: 'var(--text-muted)', lineHeight: '1.8' }}>
+                    Dette er Norges største Magic-turnering der Norges beste spillere konkurrerer om å bli Norgesmester 2026.
+                  </p>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '20px' }}>
+                    <div>
+                      <h4 style={{ color: '#7bc4f0', marginBottom: '8px' }}>📅 Dato & Tid</h4>
+                      <p style={{ color: 'var(--text-muted)' }}>8. august, 09:00</p>
                     </div>
-                  ))}
+                    <div>
+                      <h4 style={{ color: '#7bc4f0', marginBottom: '8px' }}>📋 Format</h4>
+                      <p style={{ color: 'var(--text-muted)' }}>Modern + Draft</p>
+                    </div>
+                    <div>
+                      <h4 style={{ color: '#7bc4f0', marginBottom: '8px' }}>👥 Deltakere</h4>
+                      <p style={{ color: 'var(--text-muted)' }}>Opp til 128</p>
+                    </div>
+                    <div>
+                      <h4 style={{ color: '#7bc4f0', marginBottom: '8px' }}>💰 Påmeldingspris</h4>
+                      <p style={{ color: 'var(--text-muted)' }}>600 kr Early Bird - 750 kr Vanlig</p>
+                    </div>
+                  </div>
+                  <a href="/fullt-program" className="btn btn-primary">Påmelding Main Event</a>
                 </div>
               </div>
             </section>
           )}
 
-          {/* VENDORS SECTION */}
-          {Array.isArray(vendors) && vendors.length > 0 && (
+          {/* ALT SOM SKJER I HELGEN */}
+          <section className="page-section">
+            <div className="container">
+              <div className="section-header">
+                <h2>Alt som skjer i helgen</h2>
+                <p>Hovedturneringen, side events og mer</p>
+              </div>
+              <div className="grid-2">
+                <div className="content-box-teal">
+                  <h3 style={{ color: '#6ee8dd', marginBottom: '12px' }}>
+                    🎯 Norgesmesterskapet - Magic: The Gathering
+                  </h3>
+                  <p style={{ margin: '0', color: 'var(--text-muted)', marginBottom: '15px', lineHeight: '1.6' }}>
+                    Lørdag 8. august 09:00. Slåss om tittelen som Norgesmester 2026. Draft + Modern. 128 deltakere, 3 Runder Draft → Swiss → Top 8.
+                  </p>
+                  <a href="/fullt-program" className="btn btn-primary">Les mer →</a>
+                </div>
+
+                <div className="content-box-teal">
+                  <h3 style={{ color: '#6ee8dd', marginBottom: '12px' }}>
+                    📋 Standard Grand Challenge
+                  </h3>
+                  <p style={{ margin: '0', color: 'var(--text-muted)', marginBottom: '15px', lineHeight: '1.6' }}>
+                    Søndag 09:00. Storstilt Standard-turnering begrenset til 64 deltakere. Høyt konkurransenivå og attraktive premier.
+                  </p>
+                  <a href="/fullt-program" className="btn btn-primary">Les mer →</a>
+                </div>
+
+                <div className="content-box-teal">
+                  <h3 style={{ color: '#6ee8dd', marginBottom: '12px' }}>
+                    🃏 Chaos Draft
+                  </h3>
+                  <p style={{ margin: '0', color: 'var(--text-muted)', marginBottom: '15px', lineHeight: '1.6' }}>
+                    Fredag 16:30. Bli med på Norges største Chaos Draft med pakker fra 30 forskjellige sett! Dritartig og avslappet event.
+                  </p>
+                  <a href="/fullt-program" className="btn btn-primary">Les mer →</a>
+                </div>
+
+                <div className="content-box-teal">
+                  <h3 style={{ color: '#6ee8dd', marginBottom: '12px' }}>
+                    🎲 Last Chance Bye-Turnering
+                  </h3>
+                  <p style={{ margin: '0', color: 'var(--text-muted)', marginBottom: '15px', lineHeight: '1.6' }}>
+                    Fredag 16:30. Siste sjanse til å vinne bye til hovedturneringen! Modern format.
+                  </p>
+                  <a href="/bye-turneringer" className="btn btn-primary">Les mer →</a>
+                </div>
+              </div>
+              <div style={{ marginTop: '30px', padding: '20px', backgroundColor: 'var(--box-primary)', borderRadius: '8px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                <p><strong>Side-Events:</strong> Flere turneringer i Legacy, Pauper, og mer. Mange runder med Draft. Mer info kommer…</p>
+              </div>
+            </div>
+          </section>
+
+          {/* PAGES/INFO SECTION */}
+          {Array.isArray(pages) && pages.length > 0 && (
             <section className="page-section">
               <div className="container">
                 <div className="section-header">
-                  <h2>🛍️ Leverandører ({vendors.length})</h2>
-                  <p>Kort og produkter fra ledende forhandlere</p>
+                  <h2>💡 Info</h2>
+                  <p>Praktisk informasjon og annet du trenger å vite</p>
                 </div>
-                <div className="grid-3">
-                  {vendors.map((vendor: any) => (
-                    <div
-                      key={vendor.sys.id}
-                      className="content-box-purple"
-                      style={{ textAlign: 'center' }}
-                    >
-                      <div style={{ fontSize: '2.5em', marginBottom: '15px' }}>🎯</div>
-                      <h3 style={{ color: '#dd99ff', marginBottom: '10px' }}>
-                        {String(vendor.fields?.name || 'Unavngitt leverandør')}
-                      </h3>
-                      {vendor.fields?.description && typeof vendor.fields.description === 'string' && (
-                        <p style={{ margin: '0', color: 'var(--text-muted)', fontSize: '0.95em', lineHeight: '1.6' }}>
-                          {vendor.fields.description}
-                        </p>
-                      )}
-                    </div>
-                  ))}
+                <div className="grid-2">
+                  <div className="content-box-purple">
+                    <h3 style={{ color: '#dd99ff', marginBottom: '12px' }}>
+                      🏠 Praktisk Informasjon
+                    </h3>
+                    <p style={{ margin: '0', color: 'var(--text-muted)', marginBottom: '15px', lineHeight: '1.6' }}>
+                      Reise, overnatting, mat og andre praktiske detaljer for turneringshelgen.
+                    </p>
+                    <a href="/praktisk-info" className="btn btn-primary">Les mer →</a>
+                  </div>
+
+                  <div className="content-box-purple">
+                    <h3 style={{ color: '#dd99ff', marginBottom: '12px' }}>
+                      🛍️ Vendors & Handlestedier
+                    </h3>
+                    <p style={{ margin: '0', color: 'var(--text-muted)', marginBottom: '15px', lineHeight: '1.6' }}>
+                      Se hvilke vendors som kommer og hvilke kort og produkter som vil være tilgjengelig.
+                    </p>
+                    <a href="/vendors" className="btn btn-primary">Les mer →</a>
+                  </div>
                 </div>
               </div>
             </section>
@@ -210,6 +269,37 @@ export default async function Home() {
               </div>
             </section>
           )}
+
+          {/* VENDORS SECTION */}
+          {Array.isArray(vendors) && vendors.length > 0 && (
+            <section className="page-section">
+              <div className="container">
+                <div className="section-header">
+                  <h2>🛍️ Leverandører ({vendors.length})</h2>
+                  <p>Kort og produkter fra ledende forhandlere</p>
+                </div>
+                <div className="grid-3">
+                  {vendors.map((vendor: any) => (
+                    <div
+                      key={vendor.sys.id}
+                      className="content-box-purple"
+                      style={{ textAlign: 'center' }}
+                    >
+                      <div style={{ fontSize: '2.5em', marginBottom: '15px' }}>🎯</div>
+                      <h3 style={{ color: '#dd99ff', marginBottom: '10px' }}>
+                        {String(vendor.fields?.name || 'Unavngitt leverandør')}
+                      </h3>
+                      {vendor.fields?.description && typeof vendor.fields.description === 'string' && (
+                        <p style={{ margin: '0', color: 'var(--text-muted)', fontSize: '0.95em', lineHeight: '1.6' }}>
+                          {vendor.fields.description}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
         </main>
 
         {/* FOOTER */}
@@ -235,17 +325,6 @@ export default async function Home() {
             <p style={{ color: 'var(--text-muted)', marginBottom: '20px' }}>
               Kunne ikke laste data fra Contentful. Sjekk at environment-variabler er riktig satt.
             </p>
-            <pre style={{
-              backgroundColor: 'var(--box-primary)',
-              padding: '20px',
-              borderRadius: '8px',
-              textAlign: 'left',
-              overflowX: 'auto',
-              border: '2px solid var(--accent-red)',
-              color: 'var(--text-muted)'
-            }}>
-              {error instanceof Error ? error.message : 'Ukjent feil'}
-            </pre>
           </div>
         </div>
       </div>

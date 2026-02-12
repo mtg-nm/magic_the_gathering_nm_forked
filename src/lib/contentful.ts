@@ -87,7 +87,7 @@ export async function getInfoCards() {
 export async function getEvents() {
   try {
     const entries = await client.getEntries({
-      content_type: 'event',
+      content_type: 'dupeEvent',
       order: ['fields.order'],
     });
     console.log("✅ getEvents() returnerer:", entries.items.length, "events");
@@ -101,7 +101,7 @@ export async function getEvents() {
 export async function getEventsByDay(day: string) {
   try {
     const entries = await client.getEntries({
-      content_type: 'event',
+      content_type: 'dupeEvent',
       'fields.day': day,
       order: ['fields.order'],
     });
@@ -116,7 +116,7 @@ export async function getEventsByDay(day: string) {
 export async function getEventBySlug(slug: string) {
   try {
     const entries = await client.getEntries({
-      content_type: 'event',
+      content_type: 'dupeEvent',
       'fields.slug': slug,
     });
     console.log("✅ getEventBySlug(", slug, ") returnerer:", entries.items.length, "events");
@@ -130,7 +130,7 @@ export async function getEventBySlug(slug: string) {
 export async function getFeaturedEvent() {
   try {
     const entries = await client.getEntries({
-      content_type: 'event',
+      content_type: 'dupeEvent',
       'fields.isFeatured': true,
     });
     console.log("✅ getFeaturedEvent() returnerer:", entries.items.length, "featured events");

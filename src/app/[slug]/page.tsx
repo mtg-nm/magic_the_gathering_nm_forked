@@ -19,6 +19,9 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
       title: p.fields?.title,
       slug: p.fields?.slug
     })));
+    console.log("🔍 DEBUG events:", events.length, "events loaded");
+    console.log("🔍 DEBUG normalizedSlug:", normalizedSlug);
+    console.log("🔍 DEBUG should show events:", normalizedSlug === 'fullt-program' && Array.isArray(events) && events.length > 0);
 
     // Finn siden basert på slug (case-insensitive)
     const page = pages.find((p: any) => 
@@ -179,9 +182,19 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
                           <strong>📆 Dag:</strong> {String(event.fields.day)}
                         </p>
                       )}
-                      {event.fields?.time && (
+                      {event.fields?.startTime && (
                         <p style={{ margin: '8px 0', color: 'var(--text-muted)' }}>
-                          <strong>🕐 Tid:</strong> {String(event.fields.time)}
+                          <strong>🕐 Tid:</strong> {String(event.fields.startTime)}
+                        </p>
+                      )}
+                      {event.fields?.format && (
+                        <p style={{ margin: '8px 0', color: 'var(--text-muted)' }}>
+                          <strong>📋 Format:</strong> {String(event.fields.format)}
+                        </p>
+                      )}
+                      {event.fields?.entryFee && (
+                        <p style={{ margin: '8px 0', color: 'var(--text-muted)' }}>
+                          <strong>💰 Pris:</strong> {String(event.fields.entryFee)} kr
                         </p>
                       )}
                       {event.fields?.description && typeof event.fields.description === 'string' && (
