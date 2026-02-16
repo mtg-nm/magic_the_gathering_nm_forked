@@ -48,20 +48,6 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
 
     const eventsByDay = groupEventsByDay(events);
 
-    const getEventTypeBadge = (eventType: string) => {
-      const typeMap: { [key: string]: { label: string; className: string } } = {
-        'main event': { label: 'Hovedevent', className: 'badge-main-event' },
-        'main-event': { label: 'Hovedevent', className: 'badge-main-event' },
-        'side event': { label: 'Side Event', className: 'badge-side-event' },
-        'side-event': { label: 'Side Event', className: 'badge-side-event' },
-        'qualifier': { label: 'Kvalifisering', className: 'badge-qualifier' },
-        'qualification': { label: 'Kvalifisering', className: 'badge-qualifier' },
-      };
-
-      const type = eventType?.toLowerCase().trim() || 'side-event';
-      return typeMap[type] || { label: 'Event', className: 'badge-side-event' };
-    };
-
     const dayDates: { [key: string]: string } = {
       'Fredag': '7. august',
       'Lørdag': '8. august',
@@ -75,7 +61,7 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
             <div className="header-content">
               <div className="header-left">
                 <div className="header-title">
-                  <h1>NM Magic 2025</h1>
+                  <h1>NM Magic 2026</h1>
                   <p>Norgesmesterskapet i Magic: The Gathering</p>
                 </div>
               </div>
@@ -182,6 +168,27 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
             </section>
           )}
 
+          {(page?.fields?.rulesv2 || page?.fields?.deltakere) && normalizedSlug !== 'fullt-program' && normalizedSlug !== 'bye-turneringer' && (
+            <section className="page-section">
+              <div className="container">
+                <div className="event-specs">
+                  {page?.fields?.rulesv2 && (
+                    <div className="spec">
+                      <div className="spec-label">Regler</div>
+                      <div className="spec-value">{String(page?.fields?.rulesv2)}</div>
+                    </div>
+                  )}
+                  {page?.fields?.deltakere && (
+                    <div className="spec">
+                      <div className="spec-label">Deltakere</div>
+                      <div className="spec-value">{String(page?.fields?.deltakere)}</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </section>
+          )}
+
           {normalizedSlug === 'fullt-program' && Array.isArray(events) && events.length > 0 && (
             <section className="page-section">
               <div className="container">
@@ -197,37 +204,26 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
 
                       <div className="grid-2">
                         {dayEvents.map((event: any) => {
-                          const eventType = event.fields?.eventType || 'side-event';
-                          const badge = getEventTypeBadge(eventType);
-                          const isMainEvent = badge.className === 'badge-main-event';
-                          
-                          // Hent URL fra url-feltet (RIKTIG!)
                           const signupUrl = event.fields?.url ? String(event.fields.url) : null;
-                          
-                          // Hent schedule-tekst hvis den finnes
                           const schedule = event.fields?.schedule ? String(event.fields.schedule) : null;
+                          const deltakere = event.fields?.deltakere ? String(event.fields.deltakere) : null;
+                          const rulesv2 = event.fields?.rulesv2 ? String(event.fields.rulesv2) : null;
 
                           return (
                             <div 
                               key={event.sys.id} 
-                              className={isMainEvent ? 'card main-event-card' : 'card'}
+                              className="card"
                             >
-                              <div className={`event-type-badge ${badge.className}`}>
-                                {badge.label}
-                              </div>
-                              
                               <h3 className="card-title">
                                 {String(event.fields?.title || 'Unavngitt arrangement')}
                               </h3>
-                              
-                              {/* DESCRIPTION - tekstfelt */}
+
                               {event.fields?.description && typeof event.fields.description === 'string' && (
                                 <p className="card-description">
                                   {event.fields.description}
                                 </p>
                               )}
-                              
-                              {/* SCHEDULE - hvis det har tekst */}
+
                               {schedule && (
                                 <div className="event-schedule" style={{ 
                                   backgroundColor: 'rgba(123, 196, 240, 0.1)',
@@ -242,7 +238,7 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
                                   {schedule}
                                 </div>
                               )}
-                              
+
                               <div className="event-specs">
                                 {event.fields?.startTime && (
                                   <div className="spec">
@@ -258,8 +254,14 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
                                 )}
                                 {event.fields?.maxParticipants && (
                                   <div className="spec">
-                                    <div className="spec-label">Deltakere</div>
+                                    <div className="spec-label">Max deltakere</div>
                                     <div className="spec-value">{String(event.fields.maxParticipants)}</div>
+                                  </div>
+                                )}
+                                {deltakere && (
+                                  <div className="spec">
+                                    <div className="spec-label">Deltakere</div>
+                                    <div className="spec-value">{deltakere}</div>
                                   </div>
                                 )}
                                 {event.fields?.format && (
@@ -268,9 +270,14 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
                                     <div className="spec-value">{String(event.fields.format)}</div>
                                   </div>
                                 )}
+                                {rulesv2 && (
+                                  <div className="spec">
+                                    <div className="spec-label">Regler</div>
+                                    <div className="spec-value">{rulesv2}</div>
+                                  </div>
+                                )}
                               </div>
-                              
-                              {/* PÅMELDING - basert på url-feltet */}
+
                               {signupUrl && (
                                 <a 
                                   href={signupUrl} 
@@ -302,32 +309,49 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
                 </div>
 
                 <div className="grid-2">
-                  {byeTournamentInfo.map((item: any) => (
-                    <div key={item.sys.id} className="card">
-                      <h3 className="card-title">
-                        {String(item.fields?.title || 'Unavngitt turnering')}
-                      </h3>
-                      {item.fields?.description && (
-                        <p className="card-description">
-                          {String(item.fields.description)}
-                        </p>
-                      )}
-                      <div className="event-specs">
-                        {item.fields?.format && (
-                          <div className="spec">
-                            <div className="spec-label">Format</div>
-                            <div className="spec-value">{String(item.fields.format)}</div>
-                          </div>
+                  {byeTournamentInfo.map((item: any) => {
+                    const deltakere = item.fields?.deltakere ? String(item.fields.deltakere) : null;
+                    const rulesv2 = item.fields?.rulesv2 ? String(item.fields.rulesv2) : null;
+
+                    return (
+                      <div key={item.sys.id} className="card">
+                        <h3 className="card-title">
+                          {String(item.fields?.title || 'Unavngitt turnering')}
+                        </h3>
+                        {item.fields?.description && (
+                          <p className="card-description">
+                            {String(item.fields.description)}
+                          </p>
                         )}
-                        {item.fields?.rounds && (
-                          <div className="spec">
-                            <div className="spec-label">Runder</div>
-                            <div className="spec-value">{String(item.fields.rounds)}</div>
-                          </div>
-                        )}
+                        <div className="event-specs">
+                          {item.fields?.format && (
+                            <div className="spec">
+                              <div className="spec-label">Format</div>
+                              <div className="spec-value">{String(item.fields.format)}</div>
+                            </div>
+                          )}
+                          {item.fields?.rounds && (
+                            <div className="spec">
+                              <div className="spec-label">Runder</div>
+                              <div className="spec-value">{String(item.fields.rounds)}</div>
+                            </div>
+                          )}
+                          {deltakere && (
+                            <div className="spec">
+                              <div className="spec-label">Deltakere</div>
+                              <div className="spec-value">{deltakere}</div>
+                            </div>
+                          )}
+                          {rulesv2 && (
+                            <div className="spec">
+                              <div className="spec-label">Regler</div>
+                              <div className="spec-value">{rulesv2}</div>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </section>
@@ -336,6 +360,8 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
           {!page?.fields?.heroSection && 
             !page?.fields?.description && 
             !page?.fields?.content && 
+            !page?.fields?.rulesv2 &&
+            !page?.fields?.deltakere &&
             !(normalizedSlug === 'fullt-program' && Array.isArray(events) && events.length > 0) &&
             !(normalizedSlug === 'bye-turneringer' && Array.isArray(byeTournamentInfo) && byeTournamentInfo.length > 0) && (
             <section className="page-section">
@@ -357,8 +383,8 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
         <footer className="footer">
           <div className="container">
             <div className="footer-content">
-              <div className="footer-brand">NM Magic 2025</div>
-              <div>Pilestredet 52 - Studenthuset, OsloMet • 7-9 august 2025</div>
+              <div className="footer-brand">NM Magic 2026</div>
+              <div>Pilestredet 52 - Studenthuset, OsloMet • 7-9 august 2026</div>
             </div>
           </div>
         </footer>
