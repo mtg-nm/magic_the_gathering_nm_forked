@@ -59,8 +59,13 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
         <header className="header">
           <div className="container">
             <div className="header-content">
-              <div className="header-left">
-                <div className="header-title">
+              <div className="header-left" style={{ display: 'flex', alignItems: 'center' }}>
+                <img 
+                  src="/logomtgnm.png" 
+                  alt="NM Magic 2026 Logo" 
+                  className="logo-small"
+                />
+                <div className="header-title" style={{ marginLeft: '15px' }}>
                   <h1>NM Magic 2026</h1>
                   <p>Norgesmesterskapet i Magic: The Gathering</p>
                 </div>
