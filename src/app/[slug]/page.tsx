@@ -42,6 +42,34 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
       allFields: Object.keys(item.fields || {})
     })));
 
+    // GRUPPÉR EVENTS ETTER DAG
+    const groupEventsByDay = (eventList: any[]) => {
+      const dayMap: { [key: string]: string } = {
+        'day one': 'Fredag',
+        'day two': 'Lørdag',
+        'day three': 'Søndag'
+      };
+
+      const grouped: { [key: string]: any[] } = {
+        'Fredag': [],
+        'Lørdag': [],
+        'Søndag': []
+      };
+
+      eventList.forEach((event: any) => {
+        const dayKey = event.fields?.day?.toLowerCase().trim() || '';
+        const dayName = dayMap[dayKey] || 'Annen';
+        
+        if (grouped[dayName]) {
+          grouped[dayName].push(event);
+        }
+      });
+
+      return grouped;
+    };
+
+    const eventsByDay = groupEventsByDay(events);
+
     return (
       <>
         {/* HEADER & NAVIGATION */}
@@ -161,7 +189,7 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
             </section>
           )}
 
-          {/* EVENTS SECTION - VIS PÅ FULLT-PROGRAM */}
+          {/* EVENTS SECTION - GRUPPERT ETTER DAG */}
           {normalizedSlug === 'fullt-program' && Array.isArray(events) && events.length > 0 && (
             <section className="page-section">
               <div className="container">
@@ -188,44 +216,58 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
                   </div>
                 </div>
 
-                {/* EVENTS GRID */}
-                <div className="grid-2">
-                  {events.map((event: any) => (
-                    <div
-                      key={event.sys.id}
-                      className="content-box-blue"
-                    >
-                      <h3 style={{ color: '#7bc4f0', marginBottom: '12px' }}>
-                        {String(event.fields?.title || 'Unavngitt arrangement')}
+                {/* LOOP GJENNOM DAGER */}
+                {Object.entries(eventsByDay).map(([day, dayEvents]: [string, any[]]) => (
+                  dayEvents.length > 0 && (
+                    <div key={day} style={{ marginBottom: '60px' }}>
+                      {/* DAG-OVERSKRIFT */}
+                      <h3 style={{ 
+                        fontSize: '1.8em', 
+                        fontWeight: '600', 
+                        color: '#7bc4f0', 
+                        marginBottom: '30px',
+                        paddingBottom: '15px',
+                        borderBottom: '2px solid #7bc4f0'
+                      }}>
+                        {day}
                       </h3>
-                      {event.fields?.day && (
-                        <p style={{ margin: '8px 0', color: 'var(--text-muted)' }}>
-                          <strong>📆 Dag:</strong> {String(event.fields.day)}
-                        </p>
-                      )}
-                      {event.fields?.startTime && (
-                        <p style={{ margin: '8px 0', color: 'var(--text-muted)' }}>
-                          <strong>🕐 Tid:</strong> {String(event.fields.startTime)}
-                        </p>
-                      )}
-                      {event.fields?.format && (
-                        <p style={{ margin: '8px 0', color: 'var(--text-muted)' }}>
-                          <strong>📋 Format:</strong> {String(event.fields.format)}
-                        </p>
-                      )}
-                      {event.fields?.entryFee && (
-                        <p style={{ margin: '8px 0', color: 'var(--text-muted)' }}>
-                          <strong>💰 Pris:</strong> {String(event.fields.entryFee)} kr
-                        </p>
-                      )}
-                      {event.fields?.description && typeof event.fields.description === 'string' && (
-                        <p style={{ margin: '12px 0 0 0', color: 'var(--text-muted)', lineHeight: '1.6' }}>
-                          {event.fields.description}
-                        </p>
-                      )}
+
+                      {/* EVENTS FOR DENNE DAGEN */}
+                      <div className="grid-2">
+                        {dayEvents.map((event: any) => (
+                          <div
+                            key={event.sys.id}
+                            className="content-box-blue"
+                          >
+                            <h4 style={{ color: '#7bc4f0', marginBottom: '12px' }}>
+                              {String(event.fields?.title || 'Unavngitt arrangement')}
+                            </h4>
+                            {event.fields?.startTime && (
+                              <p style={{ margin: '8px 0', color: 'var(--text-muted)' }}>
+                                <strong>🕐 Tid:</strong> {String(event.fields.startTime)}
+                              </p>
+                            )}
+                            {event.fields?.format && (
+                              <p style={{ margin: '8px 0', color: 'var(--text-muted)' }}>
+                                <strong>📋 Format:</strong> {String(event.fields.format)}
+                              </p>
+                            )}
+                            {event.fields?.entryFee && (
+                              <p style={{ margin: '8px 0', color: 'var(--text-muted)' }}>
+                                <strong>💰 Pris:</strong> {String(event.fields.entryFee)} kr
+                              </p>
+                            )}
+                            {event.fields?.description && typeof event.fields.description === 'string' && (
+                              <p style={{ margin: '12px 0 0 0', color: 'var(--text-muted)', lineHeight: '1.6' }}>
+                                {event.fields.description}
+                              </p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  ))}
-                </div>
+                  )
+                ))}
               </div>
             </section>
           )}
