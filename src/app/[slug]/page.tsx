@@ -200,6 +200,12 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
                           const eventType = event.fields?.eventType || 'side-event';
                           const badge = getEventTypeBadge(eventType);
                           const isMainEvent = badge.className === 'badge-main-event';
+                          
+                          // Hent URL fra url-feltet (RIKTIG!)
+                          const signupUrl = event.fields?.url ? String(event.fields.url) : null;
+                          
+                          // Hent schedule-tekst hvis den finnes
+                          const schedule = event.fields?.schedule ? String(event.fields.schedule) : null;
 
                           return (
                             <div 
@@ -209,14 +215,34 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
                               <div className={`event-type-badge ${badge.className}`}>
                                 {badge.label}
                               </div>
+                              
                               <h3 className="card-title">
                                 {String(event.fields?.title || 'Unavngitt arrangement')}
                               </h3>
+                              
+                              {/* DESCRIPTION - tekstfelt */}
                               {event.fields?.description && typeof event.fields.description === 'string' && (
                                 <p className="card-description">
                                   {event.fields.description}
                                 </p>
                               )}
+                              
+                              {/* SCHEDULE - hvis det har tekst */}
+                              {schedule && (
+                                <div className="event-schedule" style={{ 
+                                  backgroundColor: 'rgba(123, 196, 240, 0.1)',
+                                  padding: '12px',
+                                  borderRadius: '6px',
+                                  marginBottom: '15px',
+                                  borderLeft: '3px solid #7bc4f0',
+                                  color: 'var(--text-muted)',
+                                  fontSize: '0.95em',
+                                  lineHeight: '1.5'
+                                }}>
+                                  {schedule}
+                                </div>
+                              )}
+                              
                               <div className="event-specs">
                                 {event.fields?.startTime && (
                                   <div className="spec">
@@ -243,13 +269,15 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
                                   </div>
                                 )}
                               </div>
-                              {event.fields?.signupUrl && (
+                              
+                              {/* PÅMELDING - basert på url-feltet */}
+                              {signupUrl && (
                                 <a 
-                                  href={String(event.fields.signupUrl)} 
+                                  href={signupUrl} 
                                   target="_blank" 
                                   rel="noopener noreferrer"
                                   className="btn btn-primary"
-                                  style={{ width: '100%', textAlign: 'center', marginTop: '20px' }}
+                                  style={{ width: '100%', textAlign: 'center', marginTop: '20px', display: 'block' }}
                                 >
                                   Påmelding
                                 </a>
