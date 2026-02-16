@@ -20,7 +20,6 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
       notFound();
     }
 
-    // GRUPPÉR EVENTS ETTER DAG
     const groupEventsByDay = (eventList: any[]) => {
       const dayMap: { [key: string]: { name: string; date: string } } = {
         'day one': { name: 'Fredag', date: '7. august' },
@@ -49,22 +48,20 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
 
     const eventsByDay = groupEventsByDay(events);
 
-    // FUNKSJON FOR EVENT TYPE BADGE
     const getEventTypeBadge = (eventType: string) => {
       const typeMap: { [key: string]: { label: string; className: string } } = {
-        'main event': { label: 'Hovedevent', className: 'main-event' },
-        'main-event': { label: 'Hovedevent', className: 'main-event' },
-        'side event': { label: 'Side Event', className: 'side-event' },
-        'side-event': { label: 'Side Event', className: 'side-event' },
-        'qualifier': { label: 'Kvalifisering', className: 'qualifier' },
-        'qualification': { label: 'Kvalifisering', className: 'qualifier' },
+        'main event': { label: 'Hovedevent', className: 'badge-main-event' },
+        'main-event': { label: 'Hovedevent', className: 'badge-main-event' },
+        'side event': { label: 'Side Event', className: 'badge-side-event' },
+        'side-event': { label: 'Side Event', className: 'badge-side-event' },
+        'qualifier': { label: 'Kvalifisering', className: 'badge-qualifier' },
+        'qualification': { label: 'Kvalifisering', className: 'badge-qualifier' },
       };
 
       const type = eventType?.toLowerCase().trim() || 'side-event';
-      return typeMap[type] || { label: 'Event', className: 'side-event' };
+      return typeMap[type] || { label: 'Event', className: 'badge-side-event' };
     };
 
-    // MAP FOR DATINGFORMAT
     const dayDates: { [key: string]: string } = {
       'Fredag': '7. august',
       'Lørdag': '8. august',
@@ -73,7 +70,6 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
 
     return (
       <>
-        {/* HEADER & NAVIGATION */}
         <header className="header">
           <div className="container">
             <div className="header-content">
@@ -105,9 +101,7 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
           </div>
         </header>
 
-        {/* MAIN CONTENT */}
         <main className="main-content">
-          {/* HERO SECTION */}
           {page?.fields?.heroSection && normalizedSlug !== 'fullt-program' && normalizedSlug !== 'bye-turneringer' && (
             <section className="page-section">
               <div className="container">
@@ -156,7 +150,6 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
             </section>
           )}
 
-          {/* PAGE DESCRIPTION */}
           {page?.fields?.description && normalizedSlug !== 'fullt-program' && normalizedSlug !== 'bye-turneringer' && (
             <section className="page-section">
               <div className="container">
@@ -173,7 +166,6 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
             </section>
           )}
 
-          {/* PAGE CONTENT */}
           {page?.fields?.content && (
             <section className="page-section">
               <div className="container">
@@ -190,7 +182,6 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
             </section>
           )}
 
-          {/* EVENTS SECTION - FULLT PROGRAM */}
           {normalizedSlug === 'fullt-program' && Array.isArray(events) && events.length > 0 && (
             <section className="page-section">
               <div className="container">
@@ -208,10 +199,13 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
                         {dayEvents.map((event: any) => {
                           const eventType = event.fields?.eventType || 'side-event';
                           const badge = getEventTypeBadge(eventType);
-                          const isMainEvent = badge.className === 'main-event';
+                          const isMainEvent = badge.className === 'badge-main-event';
 
                           return (
-                            <div key={event.sys.id} className={`card ${isMainEvent ? 'main-event-card' : ''}`}>
+                            <div 
+                              key={event.sys.id} 
+                              className={isMainEvent ? 'card main-event-card' : 'card'}
+                            >
                               <div className={`event-type-badge ${badge.className}`}>
                                 {badge.label}
                               </div>
@@ -271,12 +265,11 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
             </section>
           )}
 
-          {/* BYE TOURNAMENT INFO SECTION */}
           {normalizedSlug === 'bye-turneringer' && Array.isArray(byeTournamentInfo) && byeTournamentInfo.length > 0 && (
             <section className="page-section">
               <div className="container">
                 <div className="section-header">
-                  <h2>🏆 Bye-turneringer</h2>
+                  <h2>Bye-turneringer</h2>
                   <p>Siste sjanse til å vinne bye til Norgesmesterskapet</p>
                 </div>
 
@@ -312,7 +305,6 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
             </section>
           )}
 
-          {/* HVIS INGEN INNHOLD */}
           {!page?.fields?.heroSection && 
             !page?.fields?.description && 
             !page?.fields?.content && 
@@ -334,7 +326,6 @@ export default async function DynamicPage({ params }: { params: Promise<{ slug: 
           )}
         </main>
 
-        {/* FOOTER */}
         <footer className="footer">
           <div className="container">
             <div className="footer-content">
