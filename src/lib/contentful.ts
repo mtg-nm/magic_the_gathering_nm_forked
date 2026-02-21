@@ -196,6 +196,19 @@ export async function getPracticalInfoItems() {
   }
 }
 
+export async function getByeTournamentInfoSection() {
+  try {
+    const entries = await client.getEntries({
+      content_type: 'byeTornamentInfoSection',
+    });
+    console.log("✅ getByeTournamentInfoSection() returnerer:", entries.items.length, "bye tournament info sections");
+    return entries.items; // ← Returnerer array i stedet for [0]
+  } catch (error) {
+    console.error("❌ Feil i getByeTournamentInfoSection():", error);
+    return [];
+  }
+}
+
 export async function getByeTournamentInfoSections() {
   try {
     const entries = await client.getEntries({
@@ -220,6 +233,19 @@ export async function getByeTournamentInfo() {
     return entries.items;
   } catch (error) {
     console.error("❌ Feil i getByeTournamentInfo():", error);
+    return [];
+  }
+}
+
+export async function getByeEvemt() {
+  try {
+    const entries = await client.getEntries({
+      content_type: 'byeEvemt',
+    });
+    console.log("✅ getByeEvemt() returnerer:", entries.items.length, "bye events");
+    return entries.items;
+  } catch (error) {
+    console.error("❌ Feil i getByeEvemt():", error);
     return [];
   }
 }

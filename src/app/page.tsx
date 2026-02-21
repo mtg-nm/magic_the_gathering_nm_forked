@@ -1,4 +1,4 @@
-import { getPages, getNavigation, getEvents, getVendors, getLocation } from '@/lib/contentful';
+import { getPages, getNavigation, getEvents, getVendors, getLocation, getPracticalInfoItems } from '@/lib/contentful';
 
 export default async function Home() {
   try {
@@ -7,6 +7,11 @@ export default async function Home() {
     const events = await getEvents();
     const vendors = await getVendors();
     const location = await getLocation();
+    const practicalInfoItems = await getPracticalInfoItems();
+
+    // DEBUG: Sjekk hva vi får
+    console.log('practicalInfoItems:', practicalInfoItems);
+    console.log('practicalInfoItems length:', practicalInfoItems?.length);
 
     // Finn hovedturneringen (featured event)
     const mainEvent = events.find((e: any) => e.fields?.title?.includes('Norgesmesterskapet') && e.fields?.day?.includes('8'));
@@ -25,7 +30,8 @@ export default async function Home() {
                 />
                 <div className="header-title" style={{ marginLeft: '15px' }}>
                   <h1>NM Magic 2026</h1>
-                  <p>Norgesmesterskapet i Magic: The Gathering</p>
+                  <p>7-9 August</p>
+                  <p><strong>Norgesmesterskapet i Magic: The Gathering</strong></p>
                 </div>
               </div>
               <nav className="nav-menu">
@@ -55,16 +61,6 @@ export default async function Home() {
           <section className="page-section">
             <div className="container">
               <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-                <h1 style={{ fontSize: '3em', fontWeight: '700', color: 'var(--text-light)', marginBottom: '20px', lineHeight: '1.1' }}>
-                  ⚔️ Norgesmesterskapet i Magic: The Gathering
-                </h1>
-                <p style={{ fontSize: '1.2em', color: 'var(--text-muted)', maxWidth: '700px', margin: '0 auto 40px' }}>
-                  Norges største Magic-turnering 7-9 august 2026
-                </p>
-                <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                  <a href="/fullt-program" className="btn btn-primary">📅 Alle Events</a>
-                  <a href="#velkommen-nm" className="btn btn-secondary">📖 Les mer</a>
-                </div>
               </div>
             </div>
           </section>
@@ -109,17 +105,18 @@ export default async function Home() {
           <section className="page-section" id="velkommen-nm">
             <div className="container">
               <div className="section-header">
-                <h2>Velkommen til Magic The Gathering Norgesmesterskap</h2>
+                <h1>Velkommen til Norges største Magic-turnering</h1>
+                  <p style={{ fontSize: '1.2em', color: 'var(--text-muted)', maxWidth: '700px', margin: '0 auto 40px' }}>
+                  Blir du vår neste Norgesmester?
+                </p>
               </div>
 
               {/* NORGESMESTERSKAPET - HOVEDEVENT */}
               <div className="content-box-blue" style={{ marginTop: '30px', marginBottom: '40px' }}>
                 <h3 style={{ color: '#7bc4f0', marginBottom: '15px', fontSize: '1.3em' }}>
-                  🎯 Norgesmesterskapet - Magic: The Gathering
+                  🎯 Konkurrer om å bli Norgesmester i 2026
                 </h3>
-                <p style={{ margin: '0', color: 'var(--text-muted)', marginBottom: '20px', lineHeight: '1.8', fontSize: '1.05em' }}>
-                  Lørdag 8. august 09:00. Slåss om tittelen som Norgesmester 2026. Draft + Modern. 128 deltakere, 3 Runder Draft → Swiss → Top 8.
-                </p>
+
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px', marginBottom: '20px' }}>
                   <div>
@@ -153,7 +150,8 @@ export default async function Home() {
             </div>
           </section>
 
-          {/* PRAKTISK INFORMASJON BOLK */}
+        {/* PRAKTISK INFORMASJON BOLK */}
+        {Array.isArray(practicalInfoItems) && practicalInfoItems.length > 0 ? (
           <section className="page-section">
             <div className="container">
               <div className="section-header">
@@ -162,61 +160,133 @@ export default async function Home() {
               </div>
 
               <div className="grid-2">
-                {/* LOKASJON & ADRESSE */}
-                <div className="content-box-green">
-                  <h3 style={{ color: '#9effc0', marginBottom: '15px' }}>📍 Lokasjon & Adresse</h3>
-                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
-                    <strong>Studenthuset, OsloMet</strong>
-                  </p>
-                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
-                    Pilestredet 52, 0169 Oslo
-                  </p>
-                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
-                    ~15 min fra Nationaltheatret
-                  </p>
-                </div>
+                {practicalInfoItems.map((item: any) => {
+                  // Hent content feltet
+                  const content = item.fields?.content;
 
-                {/* TRANSPORT TIL LOKASJON */}
-                <div className="content-box-green">
-                  <h3 style={{ color: '#9effc0', marginBottom: '15px' }}>🚗 Transport</h3>
-                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
-                    <strong>Trikk:</strong> Linje 17/18 til Welhavens gate (1 min gange)
-                  </p>
-                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
-                    <strong>Buss:</strong> Linje 37 til Holbergsplass (6 min gange)
-                  </p>
-                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
-                    <strong>Parkering:</strong> Gateparkering / Frydenlund P-Hus (4 min gange)
-                  </p>
-                </div>
+                  // Funksjon for å renderere rich text content
+                  const renderRichText = (richText: any): JSX.Element => {
+                    if (!richText || !richText.content) return <></>;
 
-                {/* OVERNATTING */}
-                <div className="content-box-green">
-                  <h3 style={{ color: '#9effc0', marginBottom: '15px' }}>🏨 Overnatting</h3>
-                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
-                    <strong>Hostel:</strong> Budsjettpriser i sentrum
-                  </p>
-                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
-                    <strong>Hotell:</strong> 3-5 stjerner rundt Slottet
-                  </p>
-                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
-                    <strong>Airbnb:</strong> Leiligheter å leie
-                  </p>
-                </div>
+                    return (
+                      <>
+                        {richText.content.map((block: any, idx: number) => {
+                          // Håndter paragraf blokker
+                          if (block.nodeType === 'paragraph') {
+                            return (
+                              <p
+                                key={idx}
+                                style={{
+                                  margin: '8px 0',
+                                  color: 'var(--text-muted)',
+                                  fontSize: '0.95em',
+                                  lineHeight: '1.6',
+                                }}
+                              >
+                                {block.content?.map((text: any, textIdx: number) => (
+                                  <span key={textIdx}>
+                                    {text.marks?.some((m: any) => m.type === 'bold') ? (
+                                      <strong>{text.value}</strong>
+                                    ) : text.marks?.some((m: any) => m.type === 'italic') ? (
+                                      <em>{text.value}</em>
+                                    ) : (
+                                      text.value
+                                    )}
+                                  </span>
+                                ))}
+                              </p>
+                            );
+                          }
 
-                {/* MAT & DRIKKE */}
-                <div className="content-box-green">
-                  <h3 style={{ color: '#9effc0', marginBottom: '15px' }}>🍽️ Mat & Drikke</h3>
-                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
-                    Coop Mega rett over veien
-                  </p>
-                  <p style={{ margin: '8px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
-                    Mange kafeer og restauranter i nærheten
-                  </p>
-                </div>
+                          // Håndter lister
+                          if (block.nodeType === 'unordered-list' || block.nodeType === 'ordered-list') {
+                            return (
+                              <ul
+                                key={idx}
+                                style={{
+                                  margin: '8px 0',
+                                  paddingLeft: '20px',
+                                  color: 'var(--text-muted)',
+                                  fontSize: '0.95em',
+                                  lineHeight: '1.6',
+                                }}
+                              >
+                                {block.content?.map((listItem: any, listIdx: number) => (
+                                  <li key={listIdx} style={{ margin: '4px 0' }}>
+                                    {listItem.content?.[0]?.content?.[0]?.value}
+                                  </li>
+                                ))}
+                              </ul>
+                            );
+                          }
+
+                          // Håndter headings
+                          if (block.nodeType === 'heading-1' || block.nodeType === 'heading-2' || block.nodeType === 'heading-3') {
+                            const HeadingTag = block.nodeType === 'heading-1' ? 'h4' : block.nodeType === 'heading-2' ? 'h5' : 'h6';
+                            return (
+                              <HeadingTag
+                                key={idx}
+                                style={{
+                                  margin: '12px 0 8px 0',
+                                  color: '#9effc0',
+                                  fontSize: '0.95em',
+                                  fontWeight: '600',
+                                }}
+                              >
+                                {block.content?.[0]?.value}
+                              </HeadingTag>
+                            );
+                          }
+
+                          return null;
+                        })}
+                      </>
+                    );
+                  };
+
+                  // Håndter både string og rich text
+                  let contentElement = null;
+                  if (typeof content === 'string') {
+                    // Plain string
+                    contentElement = (
+                      <p
+                        style={{
+                          margin: '8px 0',
+                          color: 'var(--text-muted)',
+                          fontSize: '0.95em',
+                          lineHeight: '1.6',
+                          whiteSpace: 'pre-wrap',
+                        }}
+                      >
+                        {content}
+                      </p>
+                    );
+                  } else if (content?.content) {
+                    // Rich text object
+                    contentElement = renderRichText(content);
+                  }
+
+                  return (
+                    <div key={item.sys.id} className="content-box-green">
+                      <h3 style={{ color: '#9effc0', marginBottom: '15px' }}>
+                        {item.fields?.icon || '📌'} {String(item.fields?.title || 'Praktisk Info')}
+                      </h3>
+                      {contentElement}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </section>
+        ) : (
+          <section className="page-section">
+            <div className="container">
+              <div className="content-box-blue" style={{ textAlign: 'center' }}>
+                <p style={{ color: 'var(--text-muted)' }}>⚠️ Ingen praktisk informasjon tilgjengelig fra Contentful</p>
+              </div>
+            </div>
+          </section>
+        )}
 
           {/* VENDORS & HANDLESTEDIER BOLK */}
           {Array.isArray(vendors) && vendors.length > 0 && (
@@ -249,41 +319,6 @@ export default async function Home() {
             </section>
           )}
 
-          {/* SJEKKLISTE & REGLER */}
-          <section className="page-section">
-            <div className="container">
-              <div className="section-header">
-                <h2>📋 Sjekkliste & Regler</h2>
-              </div>
-
-              <div className="grid-2">
-                {/* SJEKKLISTE */}
-                <div className="content-box-blue">
-                  <h3 style={{ color: '#7bc4f0', marginBottom: '15px' }}>📋 Sjekkliste</h3>
-                  <ul style={{ margin: '0', paddingLeft: '20px', color: 'var(--text-muted)', fontSize: '0.95em' }}>
-                    <li style={{ margin: '8px 0' }}>Bring ditt dekk</li>
-                    <li style={{ margin: '8px 0' }}>Penger eller kort</li>
-                    <li style={{ margin: '8px 0' }}>Notepad og penn</li>
-                    <li style={{ margin: '8px 0' }}>Komfortabel klær</li>
-                    <li style={{ margin: '8px 0' }}>Powerbank</li>
-                  </ul>
-                </div>
-
-                {/* TURNERINGSREGLER */}
-                <div className="content-box-blue">
-                  <h3 style={{ color: '#7bc4f0', marginBottom: '15px' }}>⚠️ Turneringsregler</h3>
-                  <ul style={{ margin: '0', paddingLeft: '20px', color: 'var(--text-muted)', fontSize: '0.95em' }}>
-                    <li style={{ margin: '8px 0' }}>Registrer deg før start</li>
-                    <li style={{ margin: '8px 0' }}>Sjekk formatkrav</li>
-                    <li style={{ margin: '8px 0' }}>Respektfull oppførsel</li>
-                    <li style={{ margin: '8px 0' }}>Sjekk startliste</li>
-                    <li style={{ margin: '8px 0' }}>Kom 15 min før start</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
-
           {/* KONTAKT & SPØRSMÅL */}
           <section className="page-section">
             <div className="container">
@@ -294,7 +329,7 @@ export default async function Home() {
                 <p style={{ margin: '10px 0', color: 'var(--text-muted)', fontSize: '0.95em' }}>
                   Kontakt oss på Discord • E-post: <strong>mtgnm.styret@gmail.com</strong>
                 </p>
-                <a href="#" className="btn btn-primary" style={{ marginTop: '15px' }}>
+                <a href="https://discord.com/invite/7UtayJsGBB" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ marginTop: '15px' }}>
                   🎮 Join Discord
                 </a>
               </div>
