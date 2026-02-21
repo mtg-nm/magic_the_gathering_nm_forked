@@ -1,3 +1,4 @@
+import React from 'react';
 import { getPages, getNavigation, getEvents, getVendors, getLocation, getPracticalInfoItems } from '@/lib/contentful';
 
 export default async function Home() {
@@ -106,7 +107,7 @@ export default async function Home() {
             <div className="container">
               <div className="section-header">
                 <h1>Velkommen til Norges største Magic-turnering</h1>
-                  <p style={{ fontSize: '1.2em', color: 'var(--text-muted)', maxWidth: '700px', margin: '0 auto 40px' }}>
+                <p style={{ fontSize: '1.2em', color: 'var(--text-muted)', maxWidth: '700px', margin: '0 auto 40px' }}>
                   Blir du vår neste Norgesmester?
                 </p>
               </div>
@@ -116,7 +117,6 @@ export default async function Home() {
                 <h3 style={{ color: '#7bc4f0', marginBottom: '15px', fontSize: '1.3em' }}>
                   🎯 Konkurrer om å bli Norgesmester i 2026
                 </h3>
-
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px', marginBottom: '20px' }}>
                   <div>
@@ -150,143 +150,143 @@ export default async function Home() {
             </div>
           </section>
 
-        {/* PRAKTISK INFORMASJON BOLK */}
-        {Array.isArray(practicalInfoItems) && practicalInfoItems.length > 0 ? (
-          <section className="page-section">
-            <div className="container">
-              <div className="section-header">
-                <h2>🏠 Praktisk Informasjon</h2>
-                <p>Reise, overnatting, mat og andre praktiske detaljer for turneringshelgen</p>
-              </div>
+          {/* PRAKTISK INFORMASJON BOLK */}
+          {Array.isArray(practicalInfoItems) && practicalInfoItems.length > 0 ? (
+            <section className="page-section">
+              <div className="container">
+                <div className="section-header">
+                  <h2>🏠 Praktisk Informasjon</h2>
+                  <p>Reise, overnatting, mat og andre praktiske detaljer for turneringshelgen</p>
+                </div>
 
-              <div className="grid-2">
-                {practicalInfoItems.map((item: any) => {
-                  // Hent content feltet
-                  const content = item.fields?.content;
+                <div className="grid-2">
+                  {practicalInfoItems.map((item: any) => {
+                    // Hent content feltet
+                    const content = item.fields?.content;
 
-                  // Funksjon for å renderere rich text content
-                  const renderRichText = (richText: any): JSX.Element => {
-                    if (!richText || !richText.content) return <></>;
+                    // Funksjon for å renderere rich text content
+                    const renderRichText = (richText: any): React.ReactElement => {
+                      if (!richText || !richText.content) return <></>;
+
+                      return (
+                        <>
+                          {richText.content.map((block: any, idx: number) => {
+                            // Håndter paragraf blokker
+                            if (block.nodeType === 'paragraph') {
+                              return (
+                                <p
+                                  key={idx}
+                                  style={{
+                                    margin: '8px 0',
+                                    color: 'var(--text-muted)',
+                                    fontSize: '0.95em',
+                                    lineHeight: '1.6',
+                                  }}
+                                >
+                                  {block.content?.map((text: any, textIdx: number) => (
+                                    <span key={textIdx}>
+                                      {text.marks?.some((m: any) => m.type === 'bold') ? (
+                                        <strong>{text.value}</strong>
+                                      ) : text.marks?.some((m: any) => m.type === 'italic') ? (
+                                        <em>{text.value}</em>
+                                      ) : (
+                                        text.value
+                                      )}
+                                    </span>
+                                  ))}
+                                </p>
+                              );
+                            }
+
+                            // Håndter lister
+                            if (block.nodeType === 'unordered-list' || block.nodeType === 'ordered-list') {
+                              return (
+                                <ul
+                                  key={idx}
+                                  style={{
+                                    margin: '8px 0',
+                                    paddingLeft: '20px',
+                                    color: 'var(--text-muted)',
+                                    fontSize: '0.95em',
+                                    lineHeight: '1.6',
+                                  }}
+                                >
+                                  {block.content?.map((listItem: any, listIdx: number) => (
+                                    <li key={listIdx} style={{ margin: '4px 0' }}>
+                                      {listItem.content?.[0]?.content?.[0]?.value}
+                                    </li>
+                                  ))}
+                                </ul>
+                              );
+                            }
+
+                            // Håndter headings
+                            if (block.nodeType === 'heading-1' || block.nodeType === 'heading-2' || block.nodeType === 'heading-3') {
+                              const HeadingTag = block.nodeType === 'heading-1' ? 'h4' : block.nodeType === 'heading-2' ? 'h5' : 'h6';
+                              return (
+                                <HeadingTag
+                                  key={idx}
+                                  style={{
+                                    margin: '12px 0 8px 0',
+                                    color: '#9effc0',
+                                    fontSize: '0.95em',
+                                    fontWeight: '600',
+                                  }}
+                                >
+                                  {block.content?.[0]?.value}
+                                </HeadingTag>
+                              );
+                            }
+
+                            return null;
+                          })}
+                        </>
+                      );
+                    };
+
+                    // Håndter både string og rich text
+                    let contentElement = null;
+                    if (typeof content === 'string') {
+                      // Plain string
+                      contentElement = (
+                        <p
+                          style={{
+                            margin: '8px 0',
+                            color: 'var(--text-muted)',
+                            fontSize: '0.95em',
+                            lineHeight: '1.6',
+                            whiteSpace: 'pre-wrap',
+                          }}
+                        >
+                          {content}
+                        </p>
+                      );
+                    } else if (content?.content) {
+                      // Rich text object
+                      contentElement = renderRichText(content);
+                    }
 
                     return (
-                      <>
-                        {richText.content.map((block: any, idx: number) => {
-                          // Håndter paragraf blokker
-                          if (block.nodeType === 'paragraph') {
-                            return (
-                              <p
-                                key={idx}
-                                style={{
-                                  margin: '8px 0',
-                                  color: 'var(--text-muted)',
-                                  fontSize: '0.95em',
-                                  lineHeight: '1.6',
-                                }}
-                              >
-                                {block.content?.map((text: any, textIdx: number) => (
-                                  <span key={textIdx}>
-                                    {text.marks?.some((m: any) => m.type === 'bold') ? (
-                                      <strong>{text.value}</strong>
-                                    ) : text.marks?.some((m: any) => m.type === 'italic') ? (
-                                      <em>{text.value}</em>
-                                    ) : (
-                                      text.value
-                                    )}
-                                  </span>
-                                ))}
-                              </p>
-                            );
-                          }
-
-                          // Håndter lister
-                          if (block.nodeType === 'unordered-list' || block.nodeType === 'ordered-list') {
-                            return (
-                              <ul
-                                key={idx}
-                                style={{
-                                  margin: '8px 0',
-                                  paddingLeft: '20px',
-                                  color: 'var(--text-muted)',
-                                  fontSize: '0.95em',
-                                  lineHeight: '1.6',
-                                }}
-                              >
-                                {block.content?.map((listItem: any, listIdx: number) => (
-                                  <li key={listIdx} style={{ margin: '4px 0' }}>
-                                    {listItem.content?.[0]?.content?.[0]?.value}
-                                  </li>
-                                ))}
-                              </ul>
-                            );
-                          }
-
-                          // Håndter headings
-                          if (block.nodeType === 'heading-1' || block.nodeType === 'heading-2' || block.nodeType === 'heading-3') {
-                            const HeadingTag = block.nodeType === 'heading-1' ? 'h4' : block.nodeType === 'heading-2' ? 'h5' : 'h6';
-                            return (
-                              <HeadingTag
-                                key={idx}
-                                style={{
-                                  margin: '12px 0 8px 0',
-                                  color: '#9effc0',
-                                  fontSize: '0.95em',
-                                  fontWeight: '600',
-                                }}
-                              >
-                                {block.content?.[0]?.value}
-                              </HeadingTag>
-                            );
-                          }
-
-                          return null;
-                        })}
-                      </>
+                      <div key={item.sys.id} className="content-box-green">
+                        <h3 style={{ color: '#9effc0', marginBottom: '15px' }}>
+                          {item.fields?.icon || '📌'} {String(item.fields?.title || 'Praktisk Info')}
+                        </h3>
+                        {contentElement}
+                      </div>
                     );
-                  };
-
-                  // Håndter både string og rich text
-                  let contentElement = null;
-                  if (typeof content === 'string') {
-                    // Plain string
-                    contentElement = (
-                      <p
-                        style={{
-                          margin: '8px 0',
-                          color: 'var(--text-muted)',
-                          fontSize: '0.95em',
-                          lineHeight: '1.6',
-                          whiteSpace: 'pre-wrap',
-                        }}
-                      >
-                        {content}
-                      </p>
-                    );
-                  } else if (content?.content) {
-                    // Rich text object
-                    contentElement = renderRichText(content);
-                  }
-
-                  return (
-                    <div key={item.sys.id} className="content-box-green">
-                      <h3 style={{ color: '#9effc0', marginBottom: '15px' }}>
-                        {item.fields?.icon || '📌'} {String(item.fields?.title || 'Praktisk Info')}
-                      </h3>
-                      {contentElement}
-                    </div>
-                  );
-                })}
+                  })}
+                </div>
               </div>
-            </div>
-          </section>
-        ) : (
-          <section className="page-section">
-            <div className="container">
-              <div className="content-box-blue" style={{ textAlign: 'center' }}>
-                <p style={{ color: 'var(--text-muted)' }}>⚠️ Ingen praktisk informasjon tilgjengelig fra Contentful</p>
+            </section>
+          ) : (
+            <section className="page-section">
+              <div className="container">
+                <div className="content-box-blue" style={{ textAlign: 'center' }}>
+                  <p style={{ color: 'var(--text-muted)' }}>⚠️ Ingen praktisk informasjon tilgjengelig fra Contentful</p>
+                </div>
               </div>
-            </div>
-          </section>
-        )}
+            </section>
+          )}
 
           {/* VENDORS & HANDLESTEDIER BOLK */}
           {Array.isArray(vendors) && vendors.length > 0 && (
@@ -343,7 +343,6 @@ export default async function Home() {
             <div className="footer-content">
               <div className="footer-brand">NM Magic 2026</div>
               <div>Pilestredet 52 - Studenthuset, OsloMet • 7-9 august 2026</div>
-              <div>Made by Mathias Nilsen</div>
             </div>
           </div>
         </footer>
