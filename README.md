@@ -142,7 +142,7 @@ Dette prosjektet er lisensiert under MIT-lisensen. Se [LICENSE](LICENSE) for det
 ## 👤 Forfatter
 **Manilpit**
 - GitHub: [@manilpit](https://github.com/manilpit)
-- Email: [din-email@example.com]
+- Email: [manilpit@gmail.com]
 
 ## 🔗 Nyttige ressurser
 - [Next.js Dokumentasjon](https://nextjs.org/docs)
