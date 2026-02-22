@@ -3,6 +3,9 @@ import { getPages, getNavigation, getEvents, getVendors, getPracticalInfoItems }
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 
+// ✅ ISR - Regenerer siden hver 60. sekund
+export const revalidate = 60;
+
 export default async function Home() {
   try {
     const navigation = await getNavigation();
@@ -252,23 +255,30 @@ export default async function Home() {
                   <p>Se hvilke vendors som kommer og hvilke kort og produkter som vil være tilgjengelig</p>
                 </div>
                 <div className="grid-3">
-                  {vendors.map((vendor: any) => (
-                    <div
-                      key={vendor.sys.id}
-                      className="content-box-purple"
-                      style={{ textAlign: 'center' }}
-                    >
-                      <div style={{ fontSize: '2.5em', marginBottom: '15px' }}>🎯</div>
-                      <h3 style={{ color: '#dd99ff', marginBottom: '10px' }}>
-                        {String(vendor.fields?.name || 'Unavngitt leverandør')}
-                      </h3>
-                      {vendor.fields?.description && typeof vendor.fields.description === 'string' && (
-                        <p style={{ margin: '0', color: 'var(--text-muted)', fontSize: '0.95em', lineHeight: '1.6' }}>
-                          {vendor.fields.description}
-                        </p>
-                      )}
-                    </div>
-                  ))}
+                  {vendors.map((vendor: any) => {
+                    // ✅ Hent ikon fra vendor, fallback til 🃏
+                    const vendorIcon = vendor.fields?.icon ? String(vendor.fields.icon) : '🃏';
+
+                    return (
+                      <div
+                        key={vendor.sys.id}
+                        className="content-box-purple"
+                        style={{ textAlign: 'center' }}
+                      >
+                        <div style={{ fontSize: '2.5em', marginBottom: '15px' }}>
+                          {vendorIcon}
+                        </div>
+                        <h3 style={{ color: '#dd99ff', marginBottom: '10px' }}>
+                          {String(vendor.fields?.name || 'Unavngitt leverandør')}
+                        </h3>
+                        {vendor.fields?.description && typeof vendor.fields.description === 'string' && (
+                          <p style={{ margin: '0', color: 'var(--text-muted)', fontSize: '0.95em', lineHeight: '1.6' }}>
+                            {vendor.fields.description}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </section>
