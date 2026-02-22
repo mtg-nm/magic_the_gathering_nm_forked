@@ -155,19 +155,6 @@ export async function getVendors() {
   }
 }
 
-export async function getLocation() {
-  try {
-    const entries = await client.getEntries({
-      content_type: 'location',
-    });
-    console.log("✅ getLocation() returnerer:", entries.items.length, "locations");
-    return entries.items[0];
-  } catch (error) {
-    console.error("❌ Feil i getLocation():", error);
-    return null;
-  }
-}
-
 export async function getInfoSections() {
   try {
     const entries = await client.getEntries({
@@ -200,39 +187,16 @@ export async function getByeTournamentInfoSection() {
   try {
     const entries = await client.getEntries({
       content_type: 'byeTornamentInfoSection',
+      order: ['fields.order'],
     });
-    console.log("✅ getByeTournamentInfoSection() returnerer:", entries.items.length, "bye tournament info sections");
-    return entries.items; // ← Returnerer array i stedet for [0]
-  } catch (error) {
+    console.log("✅ getByeTournamentInfoSection() returnerer:", entries.items.length, "bye tournament sections");
+    return entries.items;
+  } catch (error: any) {
+    if (error?.statusText === 'Bad Request' || error?.details?.errors?.[0]?.name === 'unknownContentType') {
+      console.warn('⚠️ Content type "byeTornamentInfoSection" eksisterer ikke i Contentful - returnerer tom array');
+      return [];
+    }
     console.error("❌ Feil i getByeTournamentInfoSection():", error);
-    return [];
-  }
-}
-
-export async function getByeTournamentInfoSections() {
-  try {
-    const entries = await client.getEntries({
-      content_type: 'byeTornamentInfoSection',
-      order: ['fields.order'],
-    });
-    console.log("✅ getByeTournamentInfoSections() returnerer:", entries.items.length, "bye tournament sections");
-    return entries.items;
-  } catch (error) {
-    console.error("❌ Feil i getByeTournamentInfoSections():", error);
-    return [];
-  }
-}
-
-export async function getByeTournamentInfo() {
-  try {
-    const entries = await client.getEntries({
-      content_type: 'byeTornamentInfoSection',
-      order: ['fields.order'],
-    });
-    console.log("✅ getByeTournamentInfo() returnerer:", entries.items.length, "bye tournament info");
-    return entries.items;
-  } catch (error) {
-    console.error("❌ Feil i getByeTournamentInfo():", error);
     return [];
   }
 }
@@ -244,7 +208,11 @@ export async function getByeEvemt() {
     });
     console.log("✅ getByeEvemt() returnerer:", entries.items.length, "bye events");
     return entries.items;
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.statusText === 'Bad Request' || error?.details?.errors?.[0]?.name === 'unknownContentType') {
+      console.warn('⚠️ Content type "byeEvemt" eksisterer ikke i Contentful - returnerer tom array');
+      return [];
+    }
     console.error("❌ Feil i getByeEvemt():", error);
     return [];
   }

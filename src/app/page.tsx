@@ -1,5 +1,7 @@
 import React from 'react';
-import { getPages, getNavigation, getEvents, getVendors, getLocation, getPracticalInfoItems } from '@/lib/contentful';
+import { getPages, getNavigation, getEvents, getVendors, getPracticalInfoItems } from '@/lib/contentful';
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
 
 export default async function Home() {
   try {
@@ -7,56 +9,17 @@ export default async function Home() {
     const pages = await getPages();
     const events = await getEvents();
     const vendors = await getVendors();
-    const location = await getLocation();
     const practicalInfoItems = await getPracticalInfoItems();
 
-    // DEBUG: Sjekk hva vi får
     console.log('practicalInfoItems:', practicalInfoItems);
     console.log('practicalInfoItems length:', practicalInfoItems?.length);
 
-    // Finn hovedturneringen (featured event)
     const mainEvent = events.find((e: any) => e.fields?.title?.includes('Norgesmesterskapet') && e.fields?.day?.includes('8'));
 
     return (
       <>
-        {/* HEADER & NAVIGATION */}
-        <header className="header">
-          <div className="container">
-            <div className="header-content">
-              <div className="header-left" style={{ display: 'flex', alignItems: 'center' }}>
-                <img 
-                  src="/logomtgnm.png" 
-                  alt="NM Magic 2026 Logo" 
-                  className="logo-small"
-                />
-                <div className="header-title" style={{ marginLeft: '15px' }}>
-                  <h1>NM Magic 2026</h1>
-                  <p>7-9 August</p>
-                  <p><strong>Norgesmesterskapet i Magic: The Gathering</strong></p>
-                </div>
-              </div>
-              <nav className="nav-menu">
-                {Array.isArray(navigation) &&
-                  navigation.map((item: any) => {
-                    const href = item.fields?.url || item.fields?.slug || '/';
+        <Header navigation={navigation} normalizedSlug="/" />
 
-                    return (
-                      <a
-                        key={item.sys.id}
-                        href={href}
-                        target={item.fields?.isExternal ? '_blank' : undefined}
-                        className={href === '/' ? 'active' : ''}
-                      >
-                        {String(item.fields?.label || item.fields?.title || 'Link')}
-                      </a>
-                    );
-                  })}
-              </nav>
-            </div>
-          </div>
-        </header>
-
-        {/* MAIN CONTENT */}
         <main className="main-content">
           {/* HERO SECTION */}
           <section className="page-section">
@@ -161,17 +124,14 @@ export default async function Home() {
 
                 <div className="grid-2">
                   {practicalInfoItems.map((item: any) => {
-                    // Hent content feltet
                     const content = item.fields?.content;
 
-                    // Funksjon for å renderere rich text content
                     const renderRichText = (richText: any): React.ReactElement => {
                       if (!richText || !richText.content) return <></>;
 
                       return (
                         <>
                           {richText.content.map((block: any, idx: number) => {
-                            // Håndter paragraf blokker
                             if (block.nodeType === 'paragraph') {
                               return (
                                 <p
@@ -198,7 +158,6 @@ export default async function Home() {
                               );
                             }
 
-                            // Håndter lister
                             if (block.nodeType === 'unordered-list' || block.nodeType === 'ordered-list') {
                               return (
                                 <ul
@@ -220,7 +179,6 @@ export default async function Home() {
                               );
                             }
 
-                            // Håndter headings
                             if (block.nodeType === 'heading-1' || block.nodeType === 'heading-2' || block.nodeType === 'heading-3') {
                               const HeadingTag = block.nodeType === 'heading-1' ? 'h4' : block.nodeType === 'heading-2' ? 'h5' : 'h6';
                               return (
@@ -244,10 +202,8 @@ export default async function Home() {
                       );
                     };
 
-                    // Håndter både string og rich text
                     let contentElement = null;
                     if (typeof content === 'string') {
-                      // Plain string
                       contentElement = (
                         <p
                           style={{
@@ -262,7 +218,6 @@ export default async function Home() {
                         </p>
                       );
                     } else if (content?.content) {
-                      // Rich text object
                       contentElement = renderRichText(content);
                     }
 
@@ -337,32 +292,34 @@ export default async function Home() {
           </section>
         </main>
 
-        {/* FOOTER */}
-        <footer className="footer">
-          <div className="container">
-            <div className="footer-content">
-              <div className="footer-brand">NM Magic 2026</div>
-              <div>Pilestredet 52 - Studenthuset, OsloMet • 7-9 august 2026</div>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </>
     );
   } catch (error) {
     console.error('Error loading content:', error);
     return (
-      <div className="page-section">
-        <div className="container">
-          <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-            <h1 style={{ fontSize: '2em', color: 'var(--accent-red)', marginBottom: '20px' }}>
-              ❌ Feil ved lasting av innhold
-            </h1>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '20px' }}>
-              Kunne ikke laste data fra Contentful. Sjekk at environment-variabler er riktig satt.
-            </p>
-          </div>
-        </div>
-      </div>
+      <>
+        <Header navigation={[]} normalizedSlug="/" />
+        <main className="main-content">
+          <section className="page-section">
+            <div className="container">
+              <div style={{ 
+                padding: '40px', 
+                backgroundColor: 'var(--box-primary)',
+                borderRadius: '8px',
+                textAlign: 'center',
+                color: 'var(--text-muted)'
+              }}>
+                <h1 style={{ fontSize: '2em', color: 'var(--accent-red)', marginBottom: '20px' }}>
+                  ❌ Feil ved lasting av innhold
+                </h1>
+                <p>Kunne ikke laste data fra Contentful. Sjekk at environment-variabler er riktig satt.</p>
+              </div>
+            </div>
+          </section>
+        </main>
+        <Footer />
+      </>
     );
   }
 }
