@@ -2,6 +2,9 @@ import { getEvents, getNavigation } from '@/lib/contentful';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 
+// ✅ ISR - Regenerer siden hver 60. sekund
+export const revalidate = 60;
+
 export default async function FulltProgramPage() {
   try {
     const navigation = await getNavigation();
@@ -28,6 +31,25 @@ export default async function FulltProgramPage() {
         if (grouped[dayName]) {
           grouped[dayName].push(event);
         }
+      });
+
+      // ✅ Sorter events innenfor hver dag etter startTime
+      Object.keys(grouped).forEach((day) => {
+        grouped[day].sort((a: any, b: any) => {
+          const timeA = a.fields?.startTime ? String(a.fields.startTime) : '';
+          const timeB = b.fields?.startTime ? String(b.fields.startTime) : '';
+          
+          // Hvis begge har tid, sorter etter tid
+          if (timeA && timeB) {
+            return timeA.localeCompare(timeB);
+          }
+          
+          // Hvis bare en har tid, plasser den med tid først
+          if (timeA) return -1;
+          if (timeB) return 1;
+          
+          return 0;
+        });
       });
 
       return grouped;

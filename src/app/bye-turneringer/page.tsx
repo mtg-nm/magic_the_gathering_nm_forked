@@ -2,6 +2,9 @@ import { getByeTournamentInfoSection, getByeEvemt, getNavigation } from '@/lib/c
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 
+// ✅ ISR - Regenerer siden hver 60. sekund
+export const revalidate = 60;
+
 export default async function ByeTournamentPage() {
   try {
     const navigation = await getNavigation();
