@@ -1,11 +1,23 @@
 'use client';
 
+import { useState } from 'react';
+
 interface HeaderProps {
   navigation: any[];
   normalizedSlug: string;
 }
 
 export function Header({ navigation, normalizedSlug }: HeaderProps) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <header className="header">
       <div className="container">
@@ -21,6 +33,20 @@ export function Header({ navigation, normalizedSlug }: HeaderProps) {
               <p>Norgesmesterskapet i Magic: The Gathering</p>
             </div>
           </div>
+
+          {/* Hamburger Menu Button - Only visible on mobile */}
+          <button 
+            className="menu-toggle"
+            onClick={toggleMenu}
+            aria-label="Toggle navigation menu"
+            aria-expanded={isMenuOpen}
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          {/* Desktop Navigation Menu */}
           <nav className="nav-menu">
             {Array.isArray(navigation) &&
               navigation.map((item: any) => {
@@ -40,6 +66,30 @@ export function Header({ navigation, normalizedSlug }: HeaderProps) {
                 );
               })}
           </nav>
+
+          {/* Mobile Navigation Dropdown */}
+          {isMenuOpen && (
+            <nav className="nav-menu-mobile">
+              {Array.isArray(navigation) &&
+                navigation.map((item: any) => {
+                  const href = item.fields?.url || item.fields?.slug || '/';
+                  const itemSlug = item.fields?.slug?.toLowerCase().trim() || '';
+                  const isActive = normalizedSlug === itemSlug;
+
+                  return (
+                    <a
+                      key={item.sys.id}
+                      href={href}
+                      target={item.fields?.isExternal ? '_blank' : undefined}
+                      className={isActive ? 'active' : ''}
+                      onClick={closeMenu}
+                    >
+                      {String(item.fields?.label || item.fields?.title || 'Link')}
+                    </a>
+                  );
+                })}
+            </nav>
+          )}
         </div>
       </div>
     </header>
