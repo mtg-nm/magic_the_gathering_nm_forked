@@ -91,6 +91,12 @@ export async function getEvents() {
       order: ['fields.order'],
     });
     console.log("✅ getEvents() returnerer:", entries.items.length, "events");
+    // ✅ Log entryFeeText for debugging
+    entries.items.forEach((item: any) => {
+      if (item.fields?.entryFeeText) {
+        console.log(`  📝 Event "${item.fields?.title}" har entryFeeText: "${item.fields.entryFeeText}"`);
+      }
+    });
     return entries.items;
   } catch (error) {
     console.error("❌ Feil i getEvents():", error);

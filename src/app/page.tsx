@@ -117,14 +117,23 @@ export default async function Home() {
                     )}
                   </div>
 
-                  {/* PÅMELDINGSPRIS */}
-                  {mainEvent.fields?.entryFee && (
-                    <div style={{ padding: '15px', backgroundColor: 'rgba(94, 179, 230, 0.1)', borderRadius: '8px', marginBottom: '20px', borderLeft: '3px solid #7bc4f0' }}>
-                      <p style={{ margin: '0', color: 'var(--text-muted)' }}>
-                        <strong>Påmeldingspris:</strong> {safeString(mainEvent.fields.entryFee)} kr
-                      </p>
-                    </div>
-                  )}
+                  {/* PÅMELDINGSPRIS - Prioriterer entryFeeText hvis begge finnes */}
+                  {(() => {
+                    const entryFee = mainEvent.fields?.entryFee ? String(mainEvent.fields.entryFee) : null;
+                    const entryFeeText = mainEvent.fields?.entryFeeText ? String(mainEvent.fields.entryFeeText) : null;
+                    
+                    // Prioriter entryFeeText hvis begge finnes, ellers bruk den som finnes
+                    const displayText = entryFeeText || entryFee;
+                    const displayValue = entryFeeText ? entryFeeText : (entryFee ? `${entryFee} kr` : null);
+
+                    return displayValue ? (
+                      <div style={{ padding: '15px', backgroundColor: 'rgba(94, 179, 230, 0.1)', borderRadius: '8px', marginBottom: '20px', borderLeft: '3px solid #7bc4f0' }}>
+                        <p style={{ margin: '0', color: 'var(--text-muted)' }}>
+                          <strong>Påmeldingspris:</strong> {displayValue}
+                        </p>
+                      </div>
+                    ) : null;
+                  })()}
 
                   {/* Schedule info */}
                   {mainEvent.fields?.schedule && (
