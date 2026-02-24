@@ -75,7 +75,7 @@ export default async function FulltProgramPage() {
               <div className="container">
                 <div className="section-header">
                   <h2>Fullt Program</h2>
-                  <p>Alt som skjer under Norgesmesterskapet</p>
+                  <p>Alt som skjer under Norgesmesterskapet vil bli postet her fortløpende</p>
                 </div>
 
                 {Object.entries(eventsByDay).map(([day, dayEvents]: [string, any[]]) => (
