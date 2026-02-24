@@ -17,7 +17,33 @@ export default async function Home() {
     console.log('practicalInfoItems:', practicalInfoItems);
     console.log('practicalInfoItems length:', practicalInfoItems?.length);
 
-    const mainEvent = events.find((e: any) => e.fields?.title?.includes('Norgesmesterskapet') && e.fields?.day?.includes('8'));
+    // 🎯 Hent featured event (isFeatured = true)
+    const mainEvent = events.find((e: any) => e.fields?.isFeatured === true);
+
+    console.log('mainEvent:', mainEvent);
+
+    // 🎯 Hjelpefunksjon for å formatere dato
+    const formatEventDate = (dateStr: string, dayStr?: string) => {
+      if (!dateStr) return 'TBA';
+      const date = new Date(dateStr);
+      const options: Intl.DateTimeFormatOptions = {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      };
+      const formatted = date.toLocaleDateString('no-NO', options);
+      return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+    };
+
+    // 🎯 Hjelpefunksjon for sikker type-konvertering
+    const safeString = (value: any): string => {
+      if (value === null || value === undefined) return '';
+      if (typeof value === 'string') return value;
+      if (typeof value === 'number') return String(value);
+      if (typeof value === 'boolean') return String(value);
+      return '';
+    };
 
     return (
       <>
@@ -32,43 +58,7 @@ export default async function Home() {
             </div>
           </section>
 
-          {/* FEATURED EVENT - Hovedturneringen */}
-          {mainEvent && (
-            <section className="page-section">
-              <div className="container">
-                <div className="section-header">
-                  <h2>🎯 Norgesmesterskapet i Magic: The Gathering</h2>
-                  <p>Hovedturneringen arrangeres lørdag 8. august 2026</p>
-                </div>
-                <div className="content-box-blue" style={{ marginTop: '40px' }}>
-                  <p style={{ marginBottom: '20px', color: 'var(--text-muted)', lineHeight: '1.8' }}>
-                    Dette er Norges største Magic-turnering der Norges beste spillere konkurrerer om å bli Norgesmester 2026.
-                  </p>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '20px' }}>
-                    <div>
-                      <h4 style={{ color: '#7bc4f0', marginBottom: '8px' }}>📅 Dato & Tid</h4>
-                      <p style={{ color: 'var(--text-muted)' }}>8. august, 09:00</p>
-                    </div>
-                    <div>
-                      <h4 style={{ color: '#7bc4f0', marginBottom: '8px' }}>📋 Format</h4>
-                      <p style={{ color: 'var(--text-muted)' }}>Modern + Draft</p>
-                    </div>
-                    <div>
-                      <h4 style={{ color: '#7bc4f0', marginBottom: '8px' }}>👥 Maks Antall Deltakere</h4>
-                      <p style={{ color: 'var(--text-muted)' }}>128</p>
-                    </div>
-                    <div>
-                      <h4 style={{ color: '#7bc4f0', marginBottom: '8px' }}>💰 Påmeldingspris</h4>
-                      <p style={{ color: 'var(--text-muted)' }}>600 kr Early Bird - 750 kr Vanlig</p>
-                    </div>
-                  </div>
-                  <a href="/fullt-program" className="btn btn-primary">Påmelding Main Event</a>
-                </div>
-              </div>
-            </section>
-          )}
-
-          {/* VELKOMMEN TIL NM */}
+          {/* VELKOMMEN TIL NM - Hardkodet overskrift med featured event boks */}
           <section className="page-section" id="velkommen-nm">
             <div className="container">
               <div className="section-header">
@@ -78,41 +68,89 @@ export default async function Home() {
                 </p>
               </div>
 
-              {/* NORGESMESTERSKAPET - HOVEDEVENT */}
-              <div className="content-box-blue" style={{ marginTop: '30px', marginBottom: '40px' }}>
-                <h3 style={{ color: '#7bc4f0', marginBottom: '15px', fontSize: '1.3em' }}>
-                  🎯 Konkurrer om å bli Norgesmester i 2026
-                </h3>
+              {/* FEATURED EVENT - Hovedturneringen fra Contentful */}
+              {mainEvent && (
+                <div className="content-box-blue" style={{ marginTop: '30px', marginBottom: '40px' }}>
+                  <h3 style={{ color: '#7bc4f0', marginBottom: '15px', fontSize: '1.3em' }}>
+                    🎯 {safeString(mainEvent.fields?.title) || 'Norgesmesterskapet'}
+                  </h3>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px', marginBottom: '20px' }}>
-                  <div>
-                    <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>📅 DAG</p>
-                    <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>Lørdag 8. august</p>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px', marginBottom: '20px' }}>
+                    {/* DAG */}
+                    {mainEvent.fields?.day && (
+                      <div>
+                        <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>📅 DAG</p>
+                        <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>
+                          {safeString(mainEvent.fields.day)}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* TID */}
+                    {mainEvent.fields?.startTime && (
+                      <div>
+                        <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>🕐 TID</p>
+                        <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>
+                          {safeString(mainEvent.fields.startTime)}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* FORMAT */}
+                    {mainEvent.fields?.format && (
+                      <div>
+                        <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>📋 FORMAT</p>
+                        <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>
+                          {safeString(mainEvent.fields.format)}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* MAKS DELTAKERE */}
+                    {mainEvent.fields?.deltakere && (
+                      <div>
+                        <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>👥 MAKS DELTAKERE</p>
+                        <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>
+                          {safeString(mainEvent.fields.deltakere)}
+                        </p>
+                      </div>
+                    )}
                   </div>
-                  <div>
-                    <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>🕐 TID</p>
-                    <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>09:00</p>
-                  </div>
-                  <div>
-                    <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>📋 FORMAT</p>
-                    <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>Draft + Modern</p>
-                  </div>
-                  <div>
-                    <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>👥 MAKS DELTAKERE</p>
-                    <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>128</p>
-                  </div>
+
+                  {/* PÅMELDINGSPRIS */}
+                  {mainEvent.fields?.entryFee && (
+                    <div style={{ padding: '15px', backgroundColor: 'rgba(94, 179, 230, 0.1)', borderRadius: '8px', marginBottom: '20px', borderLeft: '3px solid #7bc4f0' }}>
+                      <p style={{ margin: '0', color: 'var(--text-muted)' }}>
+                        <strong>Påmeldingspris:</strong> {safeString(mainEvent.fields.entryFee)} kr
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Schedule info */}
+                  {mainEvent.fields?.schedule && (
+                    <div style={{ padding: '15px', backgroundColor: 'rgba(94, 179, 230, 0.1)', borderRadius: '8px', marginBottom: '20px', borderLeft: '3px solid #7bc4f0' }}>
+                      <p style={{ margin: '0', color: 'var(--text-muted)' }}>
+                        <strong>Format:</strong> {safeString(mainEvent.fields.schedule)}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Beskrivelse */}
+                  {mainEvent.fields?.description && (
+                    <p style={{ marginBottom: '20px', color: 'var(--text-muted)', lineHeight: '1.8' }}>
+                      {safeString(mainEvent.fields.description)}
+                    </p>
+                  )}
+
+                  <a 
+                      href="/fullt-program" 
+                      className="btn btn-primary" 
+                      style={{ width: '100%', textAlign: 'center' }}
+>
+                    📅 Se fullt program
+                  </a>
                 </div>
-
-                <div style={{ padding: '15px', backgroundColor: 'rgba(94, 179, 230, 0.1)', borderRadius: '8px', marginBottom: '20px', borderLeft: '3px solid #7bc4f0' }}>
-                  <p style={{ margin: '0', color: 'var(--text-muted)' }}>
-                    <strong>Format:</strong> 3 Runder Draft → Swiss → Top 8
-                  </p>
-                </div>
-
-                <a href="/fullt-program" className="btn btn-primary" style={{ width: '100%', textAlign: 'center' }}>
-                  📅 Se fullt program
-                </a>
-              </div>
+              )}
             </div>
           </section>
 
@@ -227,7 +265,7 @@ export default async function Home() {
                     return (
                       <div key={item.sys.id} className="content-box-green">
                         <h3 style={{ color: '#9effc0', marginBottom: '15px' }}>
-                          {item.fields?.icon || '📌'} {String(item.fields?.title || 'Praktisk Info')}
+                          {safeString(item.fields?.icon) || '📌'} {safeString(item.fields?.title) || 'Praktisk Info'}
                         </h3>
                         {contentElement}
                       </div>
@@ -257,7 +295,7 @@ export default async function Home() {
                 <div className="grid-3">
                   {vendors.map((vendor: any) => {
                     // ✅ Hent ikon fra vendor, fallback til 🃏
-                    const vendorIcon = vendor.fields?.icon ? String(vendor.fields.icon) : '🃏';
+                    const vendorIcon = safeString(vendor.fields?.icon) || '🃏';
 
                     return (
                       <div
@@ -269,7 +307,7 @@ export default async function Home() {
                           {vendorIcon}
                         </div>
                         <h3 style={{ color: '#dd99ff', marginBottom: '10px' }}>
-                          {String(vendor.fields?.name || 'Unavngitt leverandør')}
+                          {safeString(vendor.fields?.name) || 'Unavngitt leverandør'}
                         </h3>
                         {vendor.fields?.description && typeof vendor.fields.description === 'string' && (
                           <p style={{ margin: '0', color: 'var(--text-muted)', fontSize: '0.95em', lineHeight: '1.6' }}>
