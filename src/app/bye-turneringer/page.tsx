@@ -25,6 +25,100 @@ export default async function ByeTournamentPage() {
         })
       : [];
 
+    // 🎯 Hjelpefunksjon for å rendere rich text
+    const renderRichText = (richText: any): React.ReactElement => {
+      if (!richText || !richText.content) return <></>;
+
+      return (
+        <>
+          {richText.content.map((block: any, idx: number) => {
+            // 📝 Håndter paragraf blokker
+            if (block.nodeType === 'paragraph') {
+              return (
+                <p
+                  key={idx}
+                  style={{
+                    margin: '0 0 12px 0',
+                    color: 'var(--text-muted)',
+                    fontSize: '0.95em',
+                    lineHeight: '1.6',
+                  }}
+                >
+                  {block.content?.map((text: any, textIdx: number) => (
+                    <span key={textIdx}>
+                      {text.marks?.some((m: any) => m.type === 'bold') ? (
+                        <strong>{text.value}</strong>
+                      ) : text.marks?.some((m: any) => m.type === 'italic') ? (
+                        <em>{text.value}</em>
+                      ) : (
+                        text.value
+                      )}
+                    </span>
+                  ))}
+                </p>
+              );
+            }
+
+            // 📋 Håndter lister (uordnet og ordnet)
+            if (block.nodeType === 'unordered-list' || block.nodeType === 'ordered-list') {
+              const ListTag = block.nodeType === 'ordered-list' ? 'ol' : 'ul';
+              return (
+                <ListTag
+                  key={idx}
+                  style={{
+                    margin: '0 0 12px 0',
+                    paddingLeft: '20px',
+                    color: 'var(--text-muted)',
+                    fontSize: '0.95em',
+                    lineHeight: '1.6',
+                  }}
+                >
+                  {block.content?.map((listItem: any, listIdx: number) => (
+                    <li key={listIdx} style={{ margin: '4px 0' }}>
+                      {listItem.content?.[0]?.content?.map((text: any, textIdx: number) => (
+                        <span key={textIdx}>
+                          {text.marks?.some((m: any) => m.type === 'bold') ? (
+                            <strong>{text.value}</strong>
+                          ) : text.marks?.some((m: any) => m.type === 'italic') ? (
+                            <em>{text.value}</em>
+                          ) : (
+                            text.value
+                          )}
+                        </span>
+                      ))}
+                    </li>
+                  ))}
+                </ListTag>
+              );
+            }
+
+            // 🔤 Håndter headings
+            if (block.nodeType === 'heading-1' || block.nodeType === 'heading-2' || block.nodeType === 'heading-3') {
+              const HeadingTag = 
+                block.nodeType === 'heading-1' ? 'h4' : 
+                block.nodeType === 'heading-2' ? 'h5' : 
+                'h6';
+              return (
+                <HeadingTag
+                  key={idx}
+                  style={{
+                    margin: '12px 0 8px 0',
+                    color: '#9effc0',
+                    fontSize: '0.95em',
+                    fontWeight: '600',
+                  }}
+                >
+                  {block.content?.[0]?.value}
+                </HeadingTag>
+              );
+            }
+
+            return null;
+          })}
+        </>
+      );
+    };
+
     return (
       <>
         <Header navigation={navigation} normalizedSlug={normalizedSlug} />
@@ -35,72 +129,54 @@ export default async function ByeTournamentPage() {
             <section className="page-section">
               <div className="container">
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginBottom: '40px' }}>
-                  {byeTournamentInfoSections.map((section: any) => (
-                    <div key={section.sys.id} className="content-box-green">
-                      <h3 style={{
-                        color: '#9effc0',
-                        marginBottom: '15px',
-                        fontSize: '1.2em'
-                      }}>
-                        {section.fields?.icon || '📌'} {String(section.fields?.title || 'Info')}
-                      </h3>
+                  {byeTournamentInfoSections.map((section: any) => {
+                    const content = section.fields?.descriptionByes;
 
-                      {section.fields?.descriptionByes && (
-                        <div style={{
-                          color: 'var(--text-muted)',
-                          fontSize: '0.95em',
-                          lineHeight: '1.6'
+                    // Render innhold basert på format
+                    let contentElement = null;
+                    if (typeof content === 'string') {
+                      // Plain string - bruker pre-wrap for å bevare linjeskift
+                      contentElement = (
+                        <p
+                          style={{
+                            margin: '0',
+                            color: 'var(--text-muted)',
+                            fontSize: '0.95em',
+                            lineHeight: '1.6',
+                            whiteSpace: 'pre-wrap',
+                            wordBreak: 'break-word',
+                          }}
+                        >
+                          {content}
+                        </p>
+                      );
+                    } else if (content?.content) {
+                      // Rich text - bruker helper-funksjon
+                      contentElement = renderRichText(content);
+                    }
+
+                    return (
+                      <div key={section.sys.id} className="content-box-green">
+                        <h3 style={{
+                          color: '#9effc0',
+                          marginBottom: '15px',
+                          fontSize: '1.2em'
                         }}>
-                          {typeof section.fields.descriptionByes === 'string' ? (
-                            <p style={{ margin: '0' }}>
-                              {section.fields.descriptionByes}
-                            </p>
-                          ) : section.fields.descriptionByes?.content ? (
-                            <div>
-                              {section.fields.descriptionByes.content.map((block: any, idx: number) => {
-                                // Håndter paragraf blokker
-                                if (block.nodeType === 'paragraph') {
-                                  return (
-                                    <p key={idx} style={{ margin: '0 0 12px 0' }}>
-                                      {block.content?.map((text: any, textIdx: number) => (
-                                        <span key={textIdx}>
-                                          {text.marks?.some((m: any) => m.type === 'bold') ? (
-                                            <strong>{text.value}</strong>
-                                          ) : text.marks?.some((m: any) => m.type === 'italic') ? (
-                                            <em>{text.value}</em>
-                                          ) : (
-                                            text.value
-                                          )}
-                                        </span>
-                                      ))}
-                                    </p>
-                                  );
-                                }
+                          {section.fields?.icon || '📌'} {String(section.fields?.title || 'Info')}
+                        </h3>
 
-                                // Håndter lister
-                                if (block.nodeType === 'unordered-list' || block.nodeType === 'ordered-list') {
-                                  return (
-                                    <ul key={idx} style={{
-                                      margin: '0 0 12px 0',
-                                      paddingLeft: '20px'
-                                    }}>
-                                      {block.content?.map((listItem: any, listIdx: number) => (
-                                        <li key={listIdx} style={{ margin: '4px 0' }}>
-                                          {listItem.content?.[0]?.content?.[0]?.value}
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  );
-                                }
-
-                                return null;
-                              })}
-                            </div>
-                          ) : null}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                        {contentElement && (
+                          <div style={{
+                            color: 'var(--text-muted)',
+                            fontSize: '0.95em',
+                            lineHeight: '1.6'
+                          }}>
+                            {contentElement}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </section>
