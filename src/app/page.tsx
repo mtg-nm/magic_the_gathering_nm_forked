@@ -77,11 +77,11 @@ export default async function Home() {
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px', marginBottom: '20px' }}>
                     {/* DAG */}
-                    {mainEvent.fields?.day && (
+                    {mainEvent.fields?.date && (
                       <div>
                         <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>📅 DAG</p>
                         <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>
-                          {safeString(mainEvent.fields.day)}
+                          {formatEventDate(safeString(mainEvent.fields.date))}
                         </p>
                       </div>
                     )}
@@ -146,7 +146,7 @@ export default async function Home() {
                       href="/fullt-program" 
                       className="btn btn-primary" 
                       style={{ width: '100%', textAlign: 'center' }}
->
+                  >
                     📅 Se fullt program
                   </a>
                 </div>

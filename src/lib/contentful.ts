@@ -218,6 +218,24 @@ export async function getByeEvemt() {
   }
 }
 
+export async function getFulltProgramInfoSection() {
+  try {
+    const entries = await client.getEntries({
+      content_type: 'fulltProgramInfoSection',
+      order: ['fields.order'],
+    });
+    console.log("✅ getFulltProgramInfoSection() returnerer:", entries.items.length, "fullt program sections");
+    return entries.items;
+  } catch (error: any) {
+    if (error?.statusText === 'Bad Request' || error?.details?.errors?.[0]?.name === 'unknownContentType') {
+      console.warn('⚠️ Content type "fulltProgramInfoSection" eksisterer ikke i Contentful - returnerer tom array');
+      return [];
+    }
+    console.error("❌ Feil i getFulltProgramInfoSection():", error);
+    return [];
+  }
+}
+
 export async function getFAQItems() {
   try {
     const entries = await client.getEntries({
