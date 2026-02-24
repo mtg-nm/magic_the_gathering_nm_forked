@@ -77,11 +77,11 @@ export default async function Home() {
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px', marginBottom: '20px' }}>
                     {/* DAG */}
-                    {mainEvent.fields?.day && (
+                    {mainEvent.fields?.date && (
                       <div>
                         <p style={{ margin: '0', color: '#9effc0', fontWeight: '600', fontSize: '0.9em' }}>📅 DAG</p>
                         <p style={{ margin: '5px 0 0 0', color: 'var(--text-muted)' }}>
-                          {safeString(mainEvent.fields.day)}
+                          {formatEventDate(safeString(mainEvent.fields.date))}
                         </p>
                       </div>
                     )}
@@ -117,14 +117,23 @@ export default async function Home() {
                     )}
                   </div>
 
-                  {/* PÅMELDINGSPRIS */}
-                  {mainEvent.fields?.entryFee && (
-                    <div style={{ padding: '15px', backgroundColor: 'rgba(94, 179, 230, 0.1)', borderRadius: '8px', marginBottom: '20px', borderLeft: '3px solid #7bc4f0' }}>
-                      <p style={{ margin: '0', color: 'var(--text-muted)' }}>
-                        <strong>Påmeldingspris:</strong> {safeString(mainEvent.fields.entryFee)} kr
-                      </p>
-                    </div>
-                  )}
+                  {/* PÅMELDINGSPRIS - Prioriterer entryFeeText hvis begge finnes */}
+                  {(() => {
+                    const entryFee = mainEvent.fields?.entryFee ? String(mainEvent.fields.entryFee) : null;
+                    const entryFeeText = mainEvent.fields?.entryFeeText ? String(mainEvent.fields.entryFeeText) : null;
+                    
+                    // Prioriter entryFeeText hvis begge finnes, ellers bruk den som finnes
+                    const displayText = entryFeeText || entryFee;
+                    const displayValue = entryFeeText ? entryFeeText : (entryFee ? `${entryFee} kr` : null);
+
+                    return displayValue ? (
+                      <div style={{ padding: '15px', backgroundColor: 'rgba(94, 179, 230, 0.1)', borderRadius: '8px', marginBottom: '20px', borderLeft: '3px solid #7bc4f0' }}>
+                        <p style={{ margin: '0', color: 'var(--text-muted)' }}>
+                          <strong>Påmeldingspris:</strong> {displayValue}
+                        </p>
+                      </div>
+                    ) : null;
+                  })()}
 
                   {/* Schedule info */}
                   {mainEvent.fields?.schedule && (
@@ -146,7 +155,7 @@ export default async function Home() {
                       href="/fullt-program" 
                       className="btn btn-primary" 
                       style={{ width: '100%', textAlign: 'center' }}
->
+                  >
                     📅 Se fullt program
                   </a>
                 </div>
