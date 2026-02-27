@@ -22,7 +22,7 @@ export default async function FulltProgramPage() {
 
       eventList.forEach((event: any) => {
         const dayKey = event.fields?.day?.toLowerCase().trim() || '';
-        
+
         if (dayKey === 'day one') grouped['Fredag'].push(event);
         else if (dayKey === 'day two') grouped['Lørdag'].push(event);
         else if (dayKey === 'day three') grouped['Søndag'].push(event);
@@ -48,12 +48,6 @@ export default async function FulltProgramPage() {
 
     const eventsByDay = groupEventsByDay(events);
 
-    const dayDates: { [key: string]: string } = {
-      'Fredag': '7. august',
-      'Lørdag': '8. august',
-      'Søndag': '9. august'
-    };
-
     const normalizedSlug = 'fullt-program';
 
     // 🎯 Hjelpefunksjon for å rendere rich text
@@ -63,6 +57,7 @@ export default async function FulltProgramPage() {
       return (
         <>
           {richText.content.map((block: any, idx: number) => {
+            // 📝 Håndter paragraf blokker
             if (block.nodeType === 'paragraph') {
               return (
                 <p
@@ -89,6 +84,7 @@ export default async function FulltProgramPage() {
               );
             }
 
+            // 📋 Håndter lister (uordnet og ordnet)
             if (block.nodeType === 'unordered-list' || block.nodeType === 'ordered-list') {
               const ListTag = block.nodeType === 'ordered-list' ? 'ol' : 'ul';
               return (
@@ -121,6 +117,7 @@ export default async function FulltProgramPage() {
               );
             }
 
+            // 🔤 Håndter headings
             if (block.nodeType === 'heading-1' || block.nodeType === 'heading-2' || block.nodeType === 'heading-3') {
               const HeadingTag = 
                 block.nodeType === 'heading-1' ? 'h4' : 
@@ -161,11 +158,12 @@ export default async function FulltProgramPage() {
                   <p>Alt som skjer under Norgesmesterskapet vil bli postet her fortløpende</p>
                 </div>
 
-                {/* INFO SECTIONS */}
+                {/* FULLT PROGRAM INFO SECTIONS - Grønne bokser under hverandre */}
                 {Array.isArray(fulltProgramInfoSections) && fulltProgramInfoSections.length > 0 && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginBottom: '40px' }}>
                     {fulltProgramInfoSections.map((section: any) => {
-                      const content = section.fields?.description;
+                      // ✅ Hent content feltet - dette er rich text
+                      const content = section.fields?.content;
 
                       let contentElement = null;
                       if (typeof content === 'string') {
@@ -184,6 +182,7 @@ export default async function FulltProgramPage() {
                           </p>
                         );
                       } else if (content?.content) {
+                        // Rich text - bruker helper-funksjon
                         contentElement = renderRichText(content);
                       }
 

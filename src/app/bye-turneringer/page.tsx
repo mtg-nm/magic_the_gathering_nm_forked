@@ -187,74 +187,9 @@ export default async function ByeTournamentPage() {
             <section className="page-section">
               <div className="container">
                 <div className="grid-2">
-                  {sortedByeEvemts.map((event: any) => {
-                    const eventName = event.fields?.eventName ? String(event.fields.eventName) : 'Unavngitt turnering';
-                    const eventDescription = event.fields?.eventDescription && typeof event.fields.eventDescription === 'string' 
-                      ? event.fields.eventDescription 
-                      : null;
-                    const eventStartTime = event.fields?.eventStartTime ? String(event.fields.eventStartTime) : null;
-                    const eventLocation = event.fields?.eventLocation ? String(event.fields.eventLocation) : null;
-                    const format = event.fields?.format ? String(event.fields.format) : null;
-                    const registrationUrl = event.fields?.registrationUrl ? String(event.fields.registrationUrl) : null;
-
-                    return (
-                      <div 
-                        key={event.sys.id} 
-                        className="card"
-                      >
-                        <h3 className="card-title">
-                          {eventName}
-                        </h3>
-
-                        {eventDescription && (
-                          <p className="card-description">
-                            {eventDescription}
-                          </p>
-                        )}
-
-                        <div className="event-specs">
-                          {eventStartTime && (
-                            <div className="spec">
-                              <div className="spec-label">Dato & Tid</div>
-                              <div className="spec-value">
-                                {new Date(eventStartTime).toLocaleDateString('no-NO', {
-                                  weekday: 'short',
-                                  day: 'numeric',
-                                  month: 'short',
-                                  hour: '2-digit',
-                                  minute: '2-digit',
-                                })}
-                              </div>
-                            </div>
-                          )}
-                          {eventLocation && (
-                            <div className="spec">
-                              <div className="spec-label">Lokasjon</div>
-                              <div className="spec-value">{eventLocation}</div>
-                            </div>
-                          )}
-                          {format && (
-                            <div className="spec">
-                              <div className="spec-label">Format</div>
-                              <div className="spec-value">{format}</div>
-                            </div>
-                          )}
-                        </div>
-
-                        {registrationUrl && (
-                          <a 
-                            href={registrationUrl} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="btn btn-primary"
-                            style={{ width: '100%', textAlign: 'center', marginTop: '20px', display: 'block' }}
-                          >
-                            Påmelding
-                          </a>
-                        )}
-                      </div>
-                    );
-                  })}
+                  {sortedByeEvemts.map((event: any) => (
+                    <ByeEventCard key={event.sys.id} event={event} />
+                  ))}
                 </div>
               </div>
             </section>
@@ -303,4 +238,85 @@ export default async function ByeTournamentPage() {
       </>
     );
   }
+}
+
+// ✅ Separat komponent for bye event-kort (samme struktur som fullt-program EventCard)
+function ByeEventCard({ event }: { event: any }) {
+  const registrationUrl = event.fields?.url ? String(event.fields.url) : null;
+  const eventName = event.fields?.eventName ? String(event.fields.eventName) : 'Unavngitt turnering';
+  const eventDescription = event.fields?.eventDescription && typeof event.fields.eventDescription === 'string' 
+    ? event.fields.eventDescription 
+    : null;
+  const eventStartTime = event.fields?.eventStartTime ? String(event.fields.eventStartTime) : null;
+  const eventLocation = event.fields?.eventLocation ? String(event.fields.eventLocation) : null;
+  const format = event.fields?.format ? String(event.fields.format) : null;
+  const entryFeeText = event.fields?.entryFeeText ? String(event.fields.entryFeeText) : null;
+  const regler = event.fields?.regler ? String(event.fields.regler) : null;
+
+  return (
+    <div className="card">
+      <h3 className="card-title">
+        {eventName}
+      </h3>
+
+      {eventDescription && (
+        <p className="card-description">
+          {eventDescription}
+        </p>
+      )}
+
+      <div className="event-specs">
+        {eventStartTime && (
+          <div className="spec">
+            <div className="spec-label">Dato & Tid</div>
+            <div className="spec-value">
+              {new Date(eventStartTime).toLocaleDateString('no-NO', {
+                weekday: 'short',
+                day: 'numeric',
+                month: 'short',
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+            </div>
+          </div>
+        )}
+        {eventLocation && (
+          <div className="spec">
+            <div className="spec-label">Lokasjon</div>
+            <div className="spec-value">{eventLocation}</div>
+          </div>
+        )}
+        {format && (
+          <div className="spec">
+            <div className="spec-label">Format</div>
+            <div className="spec-value">{format}</div>
+          </div>
+        )}
+        {entryFeeText && (
+          <div className="spec">
+            <div className="spec-label">Pris</div>
+            <div className="spec-value">{entryFeeText}</div>
+          </div>
+        )}
+        {regler && (
+          <div className="spec">
+            <div className="spec-label">Regler</div>
+            <div className="spec-value">{regler}</div>
+          </div>
+        )}
+      </div>
+
+      {registrationUrl && (
+        <a 
+          href={registrationUrl} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="btn btn-primary"
+          style={{ width: '100%', textAlign: 'center', marginTop: '20px', display: 'block' }}
+        >
+          Påmelding
+        </a>
+      )}
+    </div>
+  );
 }
