@@ -156,7 +156,7 @@ export default async function Home() {
                       className="btn btn-primary" 
                       style={{ width: '100%', textAlign: 'center' }}
                   >
-                    📅 Se fullt program
+                    📅 Se fullt program og påmelding
                   </a>
                 </div>
               )}
