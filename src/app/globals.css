@@ -71,7 +71,7 @@ body {
 /* ===== HEADER & NAVIGATION ===== */
 
 .header {
-    padding: 40px 0;
+    padding: 20px 0;
     background: linear-gradient(135deg, rgba(26, 31, 46, 0.98) 0%, rgba(42, 63, 82, 0.98) 50%, rgba(30, 58, 69, 0.98) 100%);
     backdrop-filter: blur(10px);
     position: sticky;
@@ -91,41 +91,27 @@ body {
 .header-left {
     display: flex;
     align-items: center;
-    gap: 20px;
-    flex: 1;
+    flex-shrink: 0;
 }
 
-.logo-small {
-    width: 60px;
-    height: 60px;
-    border-radius: 8px;
-    filter: drop-shadow(0 0 15px rgba(94, 179, 230, 0.4));
-    transition: transform 0.3s ease;
-    object-fit: contain;
-}
-
-.logo-small:hover {
-    transform: scale(1.05);
-}
-
-.header-title {
+.header-left a {
     display: flex;
-    flex-direction: column;
-}
-
-.header-title h1 {
-    font-size: 1.4em;
-    font-weight: 700;
-    color: var(--text-light);
+    align-items: center;
     text-decoration: none;
 }
 
-.header-title p {
-    font-size: 0.85em;
-    color: var(--primary-light);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+/* ===== NY LOGO MED TEKST ===== */
+
+.logo-with-text {
+    height: 60px;
+    width: auto;
+    filter: drop-shadow(0 0 15px rgba(94, 179, 230, 0.4));
+    transition: all 0.3s ease;
+}
+
+.logo-with-text:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 25px rgba(94, 179, 230, 0.6));
 }
 
 /* ===== DESKTOP NAVIGATION ===== */
@@ -147,6 +133,7 @@ body {
     cursor: pointer;
     font-size: 0.95em;
     font-weight: 500;
+    white-space: nowrap;
 }
 
 .nav-menu a:hover {
@@ -676,7 +663,7 @@ body {
 
 @media (max-width: 768px) {
     .header {
-        padding: 20px 0;
+        padding: 15px 0;
     }
 
     .header-content {
@@ -687,24 +674,10 @@ body {
 
     .header-left {
         flex: 1;
-        flex-direction: row;
-        align-items: center;
-        text-align: left;
-        gap: 15px;
     }
 
-    .header-title h1 {
-        font-size: 1.1em;
-    }
-
-    .header-title p {
-        font-size: 0.7em;
-        display: none;
-    }
-
-    .logo-small {
-        width: 50px;
-        height: 50px;
+    .logo-with-text {
+        height: 45px;
     }
 
     /* Skjul desktop menu */
@@ -771,24 +744,11 @@ body {
     }
 
     .header {
-        padding: 15px 0;
+        padding: 12px 0;
     }
 
-    .header-left {
-        gap: 10px;
-    }
-
-    .header-title h1 {
-        font-size: 0.95em;
-    }
-
-    .header-title p {
-        display: none;
-    }
-
-    .logo-small {
-        width: 45px;
-        height: 45px;
+    .logo-with-text {
+        height: 36px;
     }
 
     .menu-toggle {
