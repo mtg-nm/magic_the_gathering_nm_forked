@@ -293,43 +293,56 @@ export default async function Home() {
             </section>
           )}
 
-          {/* VENDORS & HANDLESTEDIER BOLK */}
-          {Array.isArray(vendors) && vendors.length > 0 && (
-            <section className="page-section">
-              <div className="container">
-                <div className="section-header">
-                  <h2>🛍️ Vendors</h2>
-                  <p>Se hvilke vendors som kommer og hvilke kort og produkter som vil være tilgjengelig</p>
-                </div>
-                <div className="grid-3">
-                  {vendors.map((vendor: any) => {
-                    // ✅ Hent ikon fra vendor, fallback til 🃏
-                    const vendorIcon = safeString(vendor.fields?.icon) || '🃏';
+         {/* VENDORS & HANDLESTEDIER BOLK */}
+{Array.isArray(vendors) && vendors.length > 0 && (
+  <section className="page-section">
+    <div className="container">
+      <div className="section-header">
+        <h2>🛍️ Vendors</h2>
+        <p>Se hvilke vendors som kommer og hvilke kort og produkter som vil være tilgjengelig</p>
+      </div>
+      <div className="grid-3">
+        {vendors.map((vendor: any) => {
+          const vendorIcon = safeString(vendor.fields?.icon) || '🃏';
+          const vendorWebsite = safeString(vendor.fields?.website);
 
-                    return (
-                      <div
-                        key={vendor.sys.id}
-                        className="content-box-purple"
-                        style={{ textAlign: 'center' }}
-                      >
-                        <div style={{ fontSize: '2.5em', marginBottom: '15px' }}>
-                          {vendorIcon}
-                        </div>
-                        <h3 style={{ color: '#dd99ff', marginBottom: '10px' }}>
-                          {safeString(vendor.fields?.name) || 'Unavngitt leverandør'}
-                        </h3>
-                        {vendor.fields?.description && typeof vendor.fields.description === 'string' && (
-                          <p style={{ margin: '0', color: 'var(--text-muted)', fontSize: '0.95em', lineHeight: '1.6' }}>
-                            {vendor.fields.description}
-                          </p>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
+          return (
+            <div
+              key={vendor.sys.id}
+              className="content-box-purple"
+              style={{ textAlign: 'center' }}
+            >
+              <div style={{ fontSize: '2.5em', marginBottom: '15px' }}>
+                {vendorIcon}
               </div>
-            </section>
-          )}
+              <h3 style={{ color: '#dd99ff', marginBottom: '10px' }}>
+                {safeString(vendor.fields?.name) || 'Unavngitt leverandør'}
+              </h3>
+              {vendor.fields?.description && typeof vendor.fields.description === 'string' && (
+                <p style={{ margin: '0 0 15px 0', color: 'var(--text-muted)', fontSize: '0.95em', lineHeight: '1.6' }}>
+                  {vendor.fields.description}
+                </p>
+              )}
+
+              {/* ✅ Website-knapp */}
+              {vendorWebsite && (
+                <a
+                  href={vendorWebsite}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary"
+                  style={{ marginTop: '10px' }}
+                >
+                  🌐 Besøk nettbutikk
+                </a>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+)}
 
           {/* KONTAKT & SPØRSMÅL */}
           <section className="page-section">
