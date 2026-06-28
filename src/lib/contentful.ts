@@ -91,12 +91,6 @@ export async function getEvents() {
       order: ['fields.order'],
     });
     console.log("✅ getEvents() returnerer:", entries.items.length, "events");
-    // ✅ Log entryFeeText for debugging
-    entries.items.forEach((item: any) => {
-      if (item.fields?.entryFeeText) {
-        console.log(`  📝 Event "${item.fields?.title}" har entryFeeText: "${item.fields.entryFeeText}"`);
-      }
-    });
     return entries.items;
   } catch (error) {
     console.error("❌ Feil i getEvents():", error);
@@ -161,6 +155,33 @@ export async function getVendors() {
   }
 }
 
+export async function getSupporters() {
+  try {
+    const entries = await client.getEntries({
+      content_type: 'supporter',
+      order: ['fields.name'],
+    });
+    console.log("✅ getSupporters() returnerer:", entries.items.length, "supporters");
+    return entries.items;
+  } catch (error) {
+    console.error("❌ Feil i getSupporters():", error);
+    return [];
+  }
+}
+
+export async function getLocation() {
+  try {
+    const entries = await client.getEntries({
+      content_type: 'location',
+    });
+    console.log("✅ getLocation() returnerer:", entries.items.length, "locations");
+    return entries.items[0];
+  } catch (error) {
+    console.error("❌ Feil i getLocation():", error);
+    return null;
+  }
+}
+
 export async function getInfoSections() {
   try {
     const entries = await client.getEntries({
@@ -193,16 +214,39 @@ export async function getByeTournamentInfoSection() {
   try {
     const entries = await client.getEntries({
       content_type: 'byeTornamentInfoSection',
+    });
+    console.log("✅ getByeTournamentInfoSection() returnerer:", entries.items.length, "bye tournament info sections");
+    return entries.items; // ← Returnerer array i stedet for [0]
+  } catch (error) {
+    console.error("❌ Feil i getByeTournamentInfoSection():", error);
+    return [];
+  }
+}
+
+export async function getByeTournamentInfoSections() {
+  try {
+    const entries = await client.getEntries({
+      content_type: 'byeTornamentInfoSection',
       order: ['fields.order'],
     });
-    console.log("✅ getByeTournamentInfoSection() returnerer:", entries.items.length, "bye tournament sections");
+    console.log("✅ getByeTournamentInfoSections() returnerer:", entries.items.length, "bye tournament sections");
     return entries.items;
-  } catch (error: any) {
-    if (error?.statusText === 'Bad Request' || error?.details?.errors?.[0]?.name === 'unknownContentType') {
-      console.warn('⚠️ Content type "byeTornamentInfoSection" eksisterer ikke i Contentful - returnerer tom array');
-      return [];
-    }
-    console.error("❌ Feil i getByeTournamentInfoSection():", error);
+  } catch (error) {
+    console.error("❌ Feil i getByeTournamentInfoSections():", error);
+    return [];
+  }
+}
+
+export async function getByeTournamentInfo() {
+  try {
+    const entries = await client.getEntries({
+      content_type: 'byeTornamentInfoSection',
+      order: ['fields.order'],
+    });
+    console.log("✅ getByeTournamentInfo() returnerer:", entries.items.length, "bye tournament info");
+    return entries.items;
+  } catch (error) {
+    console.error("❌ Feil i getByeTournamentInfo():", error);
     return [];
   }
 }
@@ -214,30 +258,8 @@ export async function getByeEvemt() {
     });
     console.log("✅ getByeEvemt() returnerer:", entries.items.length, "bye events");
     return entries.items;
-  } catch (error: any) {
-    if (error?.statusText === 'Bad Request' || error?.details?.errors?.[0]?.name === 'unknownContentType') {
-      console.warn('⚠️ Content type "byeEvemt" eksisterer ikke i Contentful - returnerer tom array');
-      return [];
-    }
+  } catch (error) {
     console.error("❌ Feil i getByeEvemt():", error);
-    return [];
-  }
-}
-
-export async function getFulltProgramInfoSection() {
-  try {
-    const entries = await client.getEntries({
-      content_type: 'fulltProgramInfoSection',
-      order: ['fields.order'],
-    });
-    console.log("✅ getFulltProgramInfoSection() returnerer:", entries.items.length, "fullt program sections");
-    return entries.items;
-  } catch (error: any) {
-    if (error?.statusText === 'Bad Request' || error?.details?.errors?.[0]?.name === 'unknownContentType') {
-      console.warn('⚠️ Content type "fulltProgramInfoSection" eksisterer ikke i Contentful - returnerer tom array');
-      return [];
-    }
-    console.error("❌ Feil i getFulltProgramInfoSection():", error);
     return [];
   }
 }
