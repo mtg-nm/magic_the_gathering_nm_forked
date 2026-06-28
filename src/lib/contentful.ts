@@ -13,6 +13,7 @@ export async function getNavigation() {
       content_type: 'navigationItem',
       order: ['fields.order'],
     });
+
     console.log("✅ getNavigation() returnerer:", entries.items.length, "nav items");
     return entries.items;
   } catch (error) {
@@ -35,7 +36,7 @@ export async function getPages() {
       slug: p.fields?.slug,
       hasHeroSection: !!p.fields?.heroSection,
       hasDescription: !!p.fields?.description,
-      hasContent: !!p.fields?.content
+      hasContent: !!p.fields?.content,
     })));
 
     return entries.items;
@@ -51,6 +52,7 @@ export async function getPageBySlug(slug: string) {
       content_type: 'page',
       'fields.slug': slug,
     });
+
     console.log("✅ getPageBySlug(", slug, ") returnerer:", entries.items.length, "sider");
     return entries.items[0];
   } catch (error) {
@@ -62,6 +64,7 @@ export async function getPageBySlug(slug: string) {
 export async function getHeroSection(id: string) {
   try {
     const entry = await client.getEntry(id);
+
     console.log("✅ getHeroSection() returnerer entry");
     return entry;
   } catch (error) {
@@ -76,6 +79,7 @@ export async function getInfoCards() {
       content_type: 'infoCard',
       order: ['fields.order'],
     });
+
     console.log("✅ getInfoCards() returnerer:", entries.items.length, "kort");
     return entries.items;
   } catch (error) {
@@ -90,6 +94,7 @@ export async function getEvents() {
       content_type: 'dupeEvent',
       order: ['fields.order'],
     });
+
     console.log("✅ getEvents() returnerer:", entries.items.length, "events");
     return entries.items;
   } catch (error) {
@@ -105,6 +110,7 @@ export async function getEventsByDay(day: string) {
       'fields.day': day,
       order: ['fields.order'],
     });
+
     console.log("✅ getEventsByDay(", day, ") returnerer:", entries.items.length, "events");
     return entries.items;
   } catch (error) {
@@ -119,6 +125,7 @@ export async function getEventBySlug(slug: string) {
       content_type: 'dupeEvent',
       'fields.slug': slug,
     });
+
     console.log("✅ getEventBySlug(", slug, ") returnerer:", entries.items.length, "events");
     return entries.items[0];
   } catch (error) {
@@ -133,6 +140,7 @@ export async function getFeaturedEvent() {
       content_type: 'dupeEvent',
       'fields.isFeatured': true,
     });
+
     console.log("✅ getFeaturedEvent() returnerer:", entries.items.length, "featured events");
     return entries.items[0];
   } catch (error) {
@@ -147,6 +155,7 @@ export async function getVendors() {
       content_type: 'vendor',
       order: ['fields.order'],
     });
+
     console.log("✅ getVendors() returnerer:", entries.items.length, "vendors");
     return entries.items;
   } catch (error) {
@@ -161,6 +170,7 @@ export async function getSupporters() {
       content_type: 'supporter',
       order: ['fields.name'],
     });
+
     console.log("✅ getSupporters() returnerer:", entries.items.length, "supporters");
     return entries.items;
   } catch (error) {
@@ -174,6 +184,7 @@ export async function getLocation() {
     const entries = await client.getEntries({
       content_type: 'location',
     });
+
     console.log("✅ getLocation() returnerer:", entries.items.length, "locations");
     return entries.items[0];
   } catch (error) {
@@ -188,6 +199,7 @@ export async function getInfoSections() {
       content_type: 'infoSection',
       order: ['fields.order'],
     });
+
     console.log("✅ getInfoSections() returnerer:", entries.items.length, "info sections");
     return entries.items;
   } catch (error) {
@@ -202,10 +214,40 @@ export async function getPracticalInfoItems() {
       content_type: 'practicalInfoItem',
       order: ['fields.order'],
     });
+
     console.log("✅ getPracticalInfoItems() returnerer:", entries.items.length, "praktiske info items");
     return entries.items;
   } catch (error) {
     console.error("❌ Feil i getPracticalInfoItems():", error);
+    return [];
+  }
+}
+
+/**
+ * Brukes av src/app/fullt-program/page.tsx.
+ *
+ * Denne funksjonen manglet som export, som gjorde at Vercel/Turbopack feilet med:
+ * "Export getFulltProgramInfoSection doesn't exist in target module".
+ *
+ * Den returnerer [] ved feil, slik at build ikke knekker hvis Contentful content type
+ * ikke finnes eller ikke er konfigurert ennå.
+ */
+export async function getFulltProgramInfoSection() {
+  try {
+    const entries = await client.getEntries({
+      content_type: 'fulltProgramInfoSection',
+      order: ['fields.order'],
+    });
+
+    console.log(
+      "✅ getFulltProgramInfoSection() returnerer:",
+      entries.items.length,
+      "fullt program info sections"
+    );
+
+    return entries.items;
+  } catch (error) {
+    console.error("❌ Feil i getFulltProgramInfoSection():", error);
     return [];
   }
 }
@@ -215,8 +257,14 @@ export async function getByeTournamentInfoSection() {
     const entries = await client.getEntries({
       content_type: 'byeTornamentInfoSection',
     });
-    console.log("✅ getByeTournamentInfoSection() returnerer:", entries.items.length, "bye tournament info sections");
-    return entries.items; // ← Returnerer array i stedet for [0]
+
+    console.log(
+      "✅ getByeTournamentInfoSection() returnerer:",
+      entries.items.length,
+      "bye tournament info sections"
+    );
+
+    return entries.items;
   } catch (error) {
     console.error("❌ Feil i getByeTournamentInfoSection():", error);
     return [];
@@ -229,7 +277,13 @@ export async function getByeTournamentInfoSections() {
       content_type: 'byeTornamentInfoSection',
       order: ['fields.order'],
     });
-    console.log("✅ getByeTournamentInfoSections() returnerer:", entries.items.length, "bye tournament sections");
+
+    console.log(
+      "✅ getByeTournamentInfoSections() returnerer:",
+      entries.items.length,
+      "bye tournament sections"
+    );
+
     return entries.items;
   } catch (error) {
     console.error("❌ Feil i getByeTournamentInfoSections():", error);
@@ -243,7 +297,13 @@ export async function getByeTournamentInfo() {
       content_type: 'byeTornamentInfoSection',
       order: ['fields.order'],
     });
-    console.log("✅ getByeTournamentInfo() returnerer:", entries.items.length, "bye tournament info");
+
+    console.log(
+      "✅ getByeTournamentInfo() returnerer:",
+      entries.items.length,
+      "bye tournament info"
+    );
+
     return entries.items;
   } catch (error) {
     console.error("❌ Feil i getByeTournamentInfo():", error);
@@ -256,6 +316,7 @@ export async function getByeEvemt() {
     const entries = await client.getEntries({
       content_type: 'byeEvemt',
     });
+
     console.log("✅ getByeEvemt() returnerer:", entries.items.length, "bye events");
     return entries.items;
   } catch (error) {
@@ -270,6 +331,7 @@ export async function getFAQItems() {
       content_type: 'faqItem',
       order: ['fields.order'],
     });
+
     console.log("✅ getFAQItems() returnerer:", entries.items.length, "FAQ items");
     return entries.items;
   } catch (error) {
@@ -285,7 +347,15 @@ export async function getFAQItemsByCategory(category: string) {
       'fields.category': category,
       order: ['fields.order'],
     });
-    console.log("✅ getFAQItemsByCategory(", category, ") returnerer:", entries.items.length, "FAQ items");
+
+    console.log(
+      "✅ getFAQItemsByCategory(",
+      category,
+      ") returnerer:",
+      entries.items.length,
+      "FAQ items"
+    );
+
     return entries.items;
   } catch (error) {
     console.error("❌ Feil i getFAQItemsByCategory():", error);
@@ -298,6 +368,7 @@ export async function getCountdownData() {
     const entries = await client.getEntries({
       content_type: 'countdownData',
     });
+
     console.log("✅ getCountdownData() returnerer:", entries.items.length, "countdown data");
     return entries.items[0];
   } catch (error) {
