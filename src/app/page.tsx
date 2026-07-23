@@ -6,6 +6,11 @@ import {
   getSupporters,
   getPracticalInfoItems,
 } from '@/lib/contentful';
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
+
+// ✅ ISR - Regenerer siden hver 60. sekund
+export const revalidate = 60;
 
 export default async function Home() {
   try {
@@ -30,48 +35,7 @@ export default async function Home() {
 
     return (
       <>
-        {/* HEADER & NAVIGATION */}
-        <header className="header">
-          <div className="container">
-            <div className="header-content">
-              <div
-                className="header-left"
-                style={{ display: 'flex', alignItems: 'center' }}
-              >
-                <img
-                  src="/logomtgnm.png"
-                  alt="NM Magic 2026 Logo"
-                  className="logo-small"
-                />
-                <div className="header-title" style={{ marginLeft: '15px' }}>
-                  <h1>NM Magic 2026</h1>
-                  <p>7-9 August</p>
-                  <p>
-                    <strong>Norgesmesterskapet i Magic: The Gathering</strong>
-                  </p>
-                </div>
-              </div>
-
-              <nav className="nav-menu">
-                {Array.isArray(navigation) &&
-                  navigation.map((item: any) => {
-                    const href = item.fields?.url || item.fields?.slug || '/';
-
-                    return (
-                      <a
-                        key={item.sys.id}
-                        href={href}
-                        target={item.fields?.isExternal ? '_blank' : undefined}
-                        className={href === '/' ? 'active' : ''}
-                      >
-                        {String(item.fields?.label || item.fields?.title || 'Link')}
-                      </a>
-                    );
-                  })}
-              </nav>
-            </div>
-          </div>
-        </header>
+        <Header navigation={navigation} normalizedSlug="/" />
 
         {/* MAIN CONTENT */}
         <main className="main-content">
@@ -462,53 +426,70 @@ export default async function Home() {
               </div>
             </section>
           )}
+{/* VENDORS BOLK */}
+{Array.isArray(vendors) && vendors.length > 0 && (
+  <section className="page-section">
+    <div className="container">
+      <div className="section-header">
+        <h2>🛍️ Vendors</h2>
+        <p>
+          Se hvilke vendors som kommer og hvilke kort og produkter som
+          vil være tilgjengelig
+        </p>
+      </div>
 
-          {/* VENDORS BOLK */}
-          {Array.isArray(vendors) && vendors.length > 0 && (
-            <section className="page-section">
-              <div className="container">
-                <div className="section-header">
-                  <h2>🛍️ Vendors</h2>
-                  <p>
-                    Se hvilke vendors som kommer og hvilke kort og produkter som
-                    vil være tilgjengelig
-                  </p>
-                </div>
+      <div className="grid-3">
+        {vendors.map((vendor: any) => {
+          const vendorIcon = vendor.fields?.icon || '🎯';
+          const vendorWebsite = vendor.fields?.website;
 
-                <div className="grid-3">
-                  {vendors.map((vendor: any) => (
-                    <div
-                      key={vendor.sys.id}
-                      className="content-box-purple"
-                      style={{ textAlign: 'center' }}
-                    >
-                      <div style={{ fontSize: '2.5em', marginBottom: '15px' }}>
-                        🎯
-                      </div>
-
-                      <h3 style={{ color: '#dd99ff', marginBottom: '10px' }}>
-                        {String(vendor.fields?.name || 'Unavngitt leverandør')}
-                      </h3>
-
-                      {vendor.fields?.description &&
-                        typeof vendor.fields.description === 'string' && (
-                          <p
-                            style={{
-                              margin: '0',
-                              color: 'var(--text-muted)',
-                              fontSize: '0.95em',
-                              lineHeight: '1.6',
-                            }}
-                          >
-                            {vendor.fields.description}
-                          </p>
-                        )}
-                    </div>
-                  ))}
-                </div>
+          return (
+            <div
+              key={vendor.sys.id}
+              className="content-box-purple"
+              style={{ textAlign: 'center' }}
+            >
+              <div style={{ fontSize: '2.5em', marginBottom: '15px' }}>
+                {vendorIcon}
               </div>
-            </section>
-          )}
+
+              <h3 style={{ color: '#dd99ff', marginBottom: '10px' }}>
+                {String(vendor.fields?.name || 'Unavngitt leverandør')}
+              </h3>
+
+              {vendor.fields?.description &&
+                typeof vendor.fields.description === 'string' && (
+                  <p
+                    style={{
+                      margin: '0 0 15px 0',
+                      color: 'var(--text-muted)',
+                      fontSize: '0.95em',
+                      lineHeight: '1.6',
+                    }}
+                  >
+                    {vendor.fields.description}
+                  </p>
+                )}
+
+              {/* ✅ Website-knapp */}
+              {vendorWebsite && (
+                <a
+                  href={vendorWebsite}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary"
+                  style={{ marginTop: '10px' }}
+                >
+                  🛍️ Besøk nettbutikk
+                </a>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+)}
 
           {/* STØTTESPILLERE BOLK */}
           {Array.isArray(supporters) && supporters.length > 0 && (
@@ -611,43 +592,35 @@ export default async function Home() {
           </section>
         </main>
 
-        {/* FOOTER */}
-        <footer className="footer">
-          <div className="container">
-            <div className="footer-content">
-              <div className="footer-brand">NM Magic 2026</div>
-              <div>
-                Pilestredet 52 - Studenthuset, OsloMet • 7-9 august 2026
-              </div>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </>
     );
   } catch (error) {
     console.error('Error loading content:', error);
 
     return (
-      <div className="page-section">
-        <div className="container">
-          <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-            <h1
-              style={{
-                fontSize: '2em',
-                color: 'var(--accent-red)',
-                marginBottom: '20px',
-              }}
-            >
-              ❌ Feil ved lasting av innhold
-            </h1>
-
-            <p style={{ color: 'var(--text-muted)', marginBottom: '20px' }}>
-              Kunne ikke laste data fra Contentful. Sjekk at
-              environment-variabler er riktig satt.
-            </p>
-          </div>
-        </div>
-      </div>
+      <>
+        <Header navigation={[]} normalizedSlug="/" />
+        <main className="main-content">
+          <section className="page-section">
+            <div className="container">
+              <div style={{ 
+                padding: '40px', 
+                backgroundColor: 'var(--box-primary)',
+                borderRadius: '8px',
+                textAlign: 'center',
+                color: 'var(--text-muted)'
+              }}>
+                <h1 style={{ fontSize: '2em', color: 'var(--accent-red)', marginBottom: '20px' }}>
+                  ❌ Feil ved lasting av innhold
+                </h1>
+                <p>Kunne ikke laste data fra Contentful. Sjekk at environment-variabler er riktig satt.</p>
+              </div>
+            </div>
+          </section>
+        </main>
+        <Footer />
+      </>
     );
   }
 }
