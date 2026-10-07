@@ -1,7 +1,7 @@
 /* globals.css - Alle CSS-variabler og felles styling */
 
 :root {
-    /* Lysere primærfarger */
+    /* Lysere prim�rfarger */
     --primary-color: #5eb3e6;
     --primary-dark: #4a9fd8;
     --primary-light: #7bc4f0;
@@ -19,7 +19,7 @@
     --box-accent: #162738;
     --box-light: #3a5a7a;
 
-    /* Teal/grønn bokser */
+    /* Teal/gr�nn bokser */
     --box-teal-dark: #1a4a48;
     --box-teal-light: #2a6a68;
 
@@ -27,7 +27,7 @@
     --box-purple-dark: #3a2a4a;
     --box-purple-light: #4a3a5a;
 
-    /* Røde bokser */
+    /* R�de bokser */
     --box-red-dark: #4a2a2a;
     --box-red-light: #6a3a3a;
 
@@ -281,7 +281,7 @@ body {
     overflow: hidden;
 }
 
-/* Glow effect på hover */
+/* Glow effect p� hover */
 .card::before {
     content: '';
     position: absolute;
@@ -325,7 +325,7 @@ body {
 
 /* ===== FARGEDE CONTENT BOKSER ===== */
 
-/* Blå boks */
+/* Bl� boks */
 .content-box-blue {
     background: linear-gradient(135deg, #1f3a52 0%, #2a4a66 100%);
     border: 3px solid #5eb3e6;
@@ -379,7 +379,7 @@ body {
     background: linear-gradient(135deg, #4a3a5a 0%, #5a4a7a 100%);
 }
 
-/* Rødt/rosafarget boks */
+/* R�dt/rosafarget boks */
 .content-box-red {
     background: linear-gradient(135deg, #4a2a2a 0%, #6a3a3a 100%);
     border: 3px solid #ff8888;
@@ -397,7 +397,7 @@ body {
     background: linear-gradient(135deg, #6a3a3a 0%, #8a4a4a 100%);
 }
 
-/* Grønn boks */
+/* Gr�nn boks */
 .content-box-green {
     background: linear-gradient(135deg, #2a4a3a 0%, #3a6a5a 100%);
     border: 3px solid #7ee8a8;
